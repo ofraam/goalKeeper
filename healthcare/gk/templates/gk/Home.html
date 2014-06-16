@@ -1,0 +1,118 @@
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="{% static 'gk/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+    <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GoalKeeper</title>
+        <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      body{
+        background-color: ;
+        padding-top: 70px
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->
+      <div class="navbar-inner">
+          <a class="brand" href="#"></a>
+          <ul class="nav navbar-left">
+            <li class="active"><a href="Home.html">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="Actions.html">Actions</a></li>
+            <li><a href="Profile.html">Profile</a></li>
+            <li><a href="Contacts.html">Contacts</a></li>
+          </ul>
+          <ul class="nav navbar-right">
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">     
+      <div class="row-fluid">
+        <div class="span8 well">      <!-- Main page -->
+
+          <div id="Goal 1">
+
+            <h2><a href="Goal.html">Weight</a></h2>     <!-- Goal 1 -->
+
+            <div class="span3">         <!-- Goal graph -->
+              <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
+            </div>
+
+            <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
+              <h4>Description of Goal</h4>
+
+              <a href="Goal.html" class="btn btn-info">You have 3 pending actions for this goal!</a>
+
+              <br><br>
+
+              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Action </a>    &nbsp;or &nbsp;    
+                  <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Status Update</a>
+
+              <br><br>
+
+              <a href="#">Dr. Logan Martin</a>,&nbsp;<a href="#">Dr. John Harvard</a>
+
+            </div>
+
+            <div class="clearfix"></div> 
+
+          </div>  <!-- Goal 1 Collapse -->
+
+        </div>  <!-- Main page Collapse -->
+        <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
+          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">   <!-- Profile picture -->
+          <br>
+          <div id="recs" class="well">
+            <h3>Recommendations:</h3>
+            <ul>
+              <li><a href="#" class="recs">Recommendation 1</a></li>
+              <li><a href="#" class="recs">Recommendation 2</a></li>
+              <li><a href="#" class="recs">Recommendation 3</a></li>
+            </ul>
+          </div>
+          <br>
+          <div class="well" id="add_goal_form">       <!-- Add Goal Form -->
+            <h3> Add a Goal</h3>
+            <form role="form">
+              <div class="form-group" id="Goal_name">
+                <label for="Goal_name"> Goal name:</label>
+                <input type="text" class="form-control" id="Goal_name" placeholder="Enter Goal Name">
+              </div>
+              <div class="radio" id="Goal_type">
+                Goal Type:
+                <label class="radio">
+                  <input type="radio" name="Goal_type" id="qualitative">Qualitative   
+                </label> 
+                <label class="radio">
+                  <input type="radio" name="Goal_type" id="quantitative">Quantitative
+                </label>
+              <div class="form-group" id="Goal_description">
+                <label for="Goal_description">Description:</label>
+                <textarea class="form-control" rows="2" id="Goal_description" placeholder="Enter a description for this goal"></textarea>
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+          </div>
+        </div>    <!-- RSM Collapse -->
+      </div>    
+
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>

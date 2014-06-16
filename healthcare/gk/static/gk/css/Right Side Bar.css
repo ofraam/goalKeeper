@@ -1,0 +1,91 @@
+#profile-pic{
+	max-width:75%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.well{
+	box-shadow: 1.5px 1.5px 4px #888888;
+}
+
+.top-user-name{
+	color:#ffffff;
+}
+
+.bg-info {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	background-color: #d9edf7;
+	border-radius: 4px;
+}
+
+span.bg-info{
+	padding-top: 5px;
+	padding-left: 5px; 
+}
+
+.bg-danger {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-bottom: 0.1px;
+	background-color: #d9edf7;
+	border-radius: 4px;
+}
+
+span.bg-danger{
+	padding-top: 5px;
+	padding-left: 5px; 
+}
+
+.bg-primary {
+	color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #006dcc;
+    *background-color: #0044cc;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	border-radius: 4px;
+}
+
+span.bg-primary{
+	padding-top: 5px;
+	padding-left: 5px; 
+}
+
+.bg-warning {
+	color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #faa732;
+    *background-color: #f89406;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	border-radius: 4px;
+}
+span.bg-warning{
+	padding-top: 5px;
+	padding-left: 5px; 
+}
+
+.bg-success {
+	color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #5bb75b;
+    *background-color: #51a351;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	border-radius: 4px;
+}
+span.bg-success{
+	padding-top: 5px;
+	padding-left: 5px; 
+}

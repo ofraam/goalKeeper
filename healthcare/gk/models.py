@@ -1,5 +1,11 @@
 """
 Models from template on genmymodel
+
+Update 0.1 by Logan on 6/16/2014 
+    -Not going off of the genmymodel as much now
+    -Added fields to caregiver, goal, and action
+    -Commented out status type and family member
+
 """
 from django.db import models
 
@@ -12,8 +18,10 @@ class Caregiver(models.Model):
     to get the patients, use caregiver.patient_set
     to get the actions, use caregiver.action_set
     """
-    name = models.CharField(max_length=100)
-    role = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    role = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20)
 
 class Patient(models.Model):
     """
@@ -32,12 +40,14 @@ class Goal(models.Model):
     notes = models.TextField()
     active = models.BooleanField()
 
+'''
 class StatusUpdateType(models.Model):
     name = models.CharField(max_length = 100)
     patient = models.ForeignKey(Patient)
     goal = models.ForeignKey(Goal)
     frequency = models.IntegerField()       # how is it defined?
     value_options = models.CharField(max_length = 100)
+'''
 
 class StatusUpdate(models.Model):
     #ctype = models.ForeignKey(StatusUpdateType)
@@ -46,16 +56,20 @@ class StatusUpdate(models.Model):
     reporting_caregiver = models.ForeignKey(Caregiver)
     notes = models.TextField()
     status = models.CharField(max_length = 100)
+    data_value = models.IntegerField()
 
+'''         will fall under caregiver / contact category if necessary
 class FamilyMember(models.Model):
     name = models.CharField(max_length=100)
     patient = models.ForeignKey(Patient)
+'''
 
 class Action(models.Model):
     goal = models.ForeignKey(Goal)
     completed = models.BooleanField()
     name = models.CharField(max_length=100)
-    notes = models.TextField()
+    notes = models.TextField()      #possibly unnecessary?
     caregiver = models.ForeignKey(Caregiver)
     deadline = models.DateField()
+    date_added = models.DateField(auto_now_add=True)
     

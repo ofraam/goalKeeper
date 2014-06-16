@@ -5,7 +5,5 @@ from gk.models import *
 admin.site.register(Caregiver)
 admin.site.register(Patient)
 admin.site.register(Goal)
-admin.site.register(StatusUpdateType)
 admin.site.register(StatusUpdate)
-admin.site.register(FamilyMember)
 admin.site.register(Action)
