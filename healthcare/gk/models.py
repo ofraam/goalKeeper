@@ -40,7 +40,7 @@ class StatusUpdateType(models.Model):
     value_options = models.CharField(max_length = 100)
 
 class StatusUpdate(models.Model):
-    type = models.ForeignKey(StatusUpdateType)
+    #ctype = models.ForeignKey(StatusUpdateType)
     goal = models.ForeignKey(Goal)
     time = models.DateField(auto_now_add=True)
     reporting_caregiver = models.ForeignKey(Caregiver)
