@@ -1,0 +1,186 @@
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="{% static 'gk/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+    <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GoalKeeper</title>
+        <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      body{
+        padding-top: 70px
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->
+      <div class="navbar-inner">
+          <a class="brand" href="#"></a>
+
+          <ul class="nav">
+            <li class="active"><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action">Actions</a></li>
+            <li><a href="/goalkeeper/profile">Profile</a></li>
+            <li><a href="/goalkeeper/contacts">Contacts</a></li>
+          </ul>
+          <ul class="nav navbar-right">
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">     
+      <div class="row-fluid">
+        <div class="span9 well">      <!-- Main page -->
+          <div class="row-fluid">
+            <div class="span7">         <!-- Goal graph / Title -->
+              <h2>Weight</h2>
+              <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
+            </div>
+            <div class="span5">         <!-- Status Updates -->
+              <h3>Add Status Update</h3>
+
+              <form role="form" class="well">
+
+                <textarea class="form-control" rows="2" placeholder="Enter a status update about this goal here." style="width:96%"></textarea><br>
+                <div class="form-group" id="Update-type">
+                  <label for="Update-type"> Goal name:</label>
+                  <input type="number" class="form-control pull-left" id="Update-type" placeholder="Enter a Number">
+                </div>
+                <button type="submit" class="btn btn-default pull-right">Post</button>
+                <div class="clearfix"></div>
+              </form>
+
+              <h3>Recent Status Updates</h3>
+
+              <div id="status udpdate" class="bg-info">
+                <p >Billy got sick this and lost a lot of weight. He is feeling better now and should be putting some of that weight back on soon.<br><small>Posted on 12/2/2013 2:37pm</small></p>
+              </div>
+
+              <br>
+
+              <div id="status udpdate" class="bg-info">
+                <p >This month Billy put on a little weight. He has been a little less active since soccer ended mid October.<br><small>Posted on 11/6/2013 7:12pm</small></p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row-fluid">
+            <div class="span7">             <!-- Pending/Completed Actions -->
+              <h3>Pending Actions</h3>
+
+              <p>
+                <button type="button" class="btn btn-primary btn-small">Complete</button>
+                &nbsp;&nbsp;
+                <span class="bg-warning">Weigh Billy on January 3rd, 2014</span>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              </p>
+
+              <p>
+                <button type="button" class="btn btn-primary btn-small">Complete</button>
+                &nbsp;&nbsp;
+                <span class="bg-warning">Appointment with Dr. Martin on January 8th, 2014</span>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              </p>
+
+              <p>
+                <button type="button" class="btn btn-primary btn-small">Complete</button>
+                &nbsp;&nbsp;
+                <span class="bg-warning">Appointment with Dr. Harvard on February 12th, 2014</span>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              </p>
+
+              <hr>
+
+              <h3>Completed Actions</h3>
+
+              <p>
+                <span class="bg-success">&nbsp;&check;&nbsp;</span>
+                &nbsp;
+                <span class="bg-success">Weigh Billy on December 3rd, 2013</span>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              </p>
+
+              <p>
+                <span class="bg-success">&nbsp;&check;&nbsp;</span>
+                &nbsp;
+                <span class="bg-success">Weigh Billy on November 3rd, 2013</span>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              </p>
+
+            </div>
+            <div class="span5">             <!-- New Action Form -->
+              <h3>Add an Action for this Goal</h3>
+
+              <form role="form" class="well">
+
+                <div class="form-group" id="Action">
+                  <label for="Action">Action: </label>
+                  <input type="text" class="form-control" id="Action" placeholder="Enter Action">
+                </div>
+
+                <div class="form-group" id="date">
+                  <input type="date" class="form-control"></input>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-small">Submit</button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
+          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">   <!-- Profile picture -->
+          <br>
+          <div id="recs" class="well">
+            <h3>Recommendations:</h3>
+            <ul>
+              <li><a href="#">Recommendation 1</a></li>
+              <li><a href="#">Recommendation 2</a></li>
+              <li><a href="#">Recommendation 3</a></li>
+            </ul>
+          </div>
+          <div class="well" id="contacts">
+            <h3>Care Givers for this Goal</h3>
+            <ul>
+              <li><a href="#">Dr. Logan Martin</a></li>
+              <li><a href="#">Dr. John Harvard</a></li>
+              <li>
+                <form>
+                  <div id="caregiver_list">
+                    <input type="checkbox" class="form-control" name="caregiver" value="Dr. Dinosaur"> Dr. Dinosaur</input>
+                    <br>
+                    <input type="checkbox" class="form-control" name="caregiver" value="Dr. Dre"> Dr. Dre</input>
+                  </div>
+                  <button type="submit" class="btn btn-default btn-small"><i class="icon icon-plus"></i> Add Caregiver </button>
+                </form>
+              </li> 
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
+</html>

@@ -1,6 +1,5 @@
 {% load staticfiles %}
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,9 +16,7 @@
 
     <style>
       body{
-        background-color: ;
         padding-top: 70px
-
       }
     </style>
   </head>
@@ -28,10 +25,10 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav navbar-left">
-            <li class="active"><a href="Home.html">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="Actions.html">Actions</a></li>
-            <li><a href="Profile.html">Profile</a></li>
-            <li><a href="Contacts.html">Contacts</a></li>
+            <li class="active"><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action">Actions</a></li>
+            <li><a href="/goalkeeper/profile">Profile</a></li>
+            <li><a href="/goalkeeper/contacts">Contacts</a></li>
           </ul>
           <ul class="nav navbar-right">
             <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
@@ -45,7 +42,7 @@
 
           <div id="Goal 1">
 
-            <h2><a href="Goal.html">Weight</a></h2>     <!-- Goal 1 -->
+            <h2><a href="/goalkeeper/goal">Weight</a></h2>     <!-- Goal 1 -->
 
             <div class="span3">         <!-- Goal graph -->
               <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
@@ -54,7 +51,7 @@
             <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
               <h4>Description of Goal</h4>
 
-              <a href="Goal.html" class="btn btn-info">You have 3 pending actions for this goal!</a>
+              <a href="/goalkeeper/goal" class="btn btn-info">You have 3 pending actions for this goal!</a>
 
               <br><br>
 

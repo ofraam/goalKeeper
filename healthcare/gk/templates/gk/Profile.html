@@ -1,0 +1,86 @@
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="{% static 'gk/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+    <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GoalKeeper</title>
+        <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      body{
+        padding-top: 70px
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->
+      <div class="navbar-inner">
+          <a class="brand" href="#"></a>
+          <ul class="nav">
+            <li><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action">Actions</a></li>
+            <li class="active"><a href="/goalkeeper/profile">Profile</a></li>
+            <li><a href="/goalkeeper/contacts">Contacts</a></li>
+          </ul>
+          <ul class="nav navbar-right">
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">     
+      <div class="row-fluid">
+        <div class="span8 well">
+          <div class="span6">      <!-- Main page -->
+            <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">
+            <br>
+            <h3>New Update</h3>
+
+            <form role="form">
+              <textarea class="form-control" rows="3" placeholder="Enter an update about Billy here." style="width:96%"></textarea><br>
+              <button type="submit" class="btn btn-default pull-right">Post</button>
+            </form>
+            <br>
+            
+          </div>
+          <div class="span6">
+            <div id="User_info">
+              <h2 id="User_name">Billy Smith</h2>
+              <p id="User_age"><strong>Age: </strong>12</p>
+              <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p>
+            </div>
+
+            <div id="Gen_updates">
+
+              <div id="Gen_update" class="bg-info">
+                <p >Billy got sick this and lost a lot of weight. He is feeling better now and should be putting some of that weight back on soon.<br><small>Posted on 12/2/2013 2:37pm</small></p>
+              </div>
+
+              <br>
+
+              <div id="Gen_update" class="bg-info">
+                <p >This month Billy put on a little weight. He has been a little less active since soccer ended mid October.<br><small>Posted on 11/6/2013 7:12pm</small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="span4 well">   <!-- Right Side Bar -->
+          <button type="button" class="btn btn-info"><i class="icon icon-pencil"></i>&nbsp;Edit Profile</button>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
