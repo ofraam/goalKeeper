@@ -38,35 +38,43 @@
     </div>
     <div class="container-fluid">     
       <div class="row-fluid">
-        <div class="span8 well">      <!-- Main page -->
+        <div class="span8">      <!-- Main page -->
 
-          <div id="Goal 1">
+          {% if latest_goals %}
+          {% for goal in latest_goals %}
+          <div id="{{goal.name}}" class="well">
 
-            <h2><a href="/goalkeeper/goal">Weight</a></h2>     <!-- Goal 1 -->
+            <h2><a href="/goalkeeper/goal/{{goal.name}}">{{goal.name}}</a></h2>     <!-- Goal 1 -->
 
             <div class="span3">         <!-- Goal graph -->
               <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
             </div>
 
             <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
-              <h4>Description of Goal</h4>
+              <h4>{{goal.notes}}</h4>
 
-              <a href="/goalkeeper/goal" class="btn btn-info">You have 3 pending actions for this goal!</a>
-
-              <br><br>
-
-              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Action </a>    &nbsp;or &nbsp;    
-                  <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Status Update</a>
+              <a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">You have pending actions for this goal!</a>
 
               <br><br>
 
-              <a href="#">Dr. Logan Martin</a>,&nbsp;<a href="#">Dr. John Harvard</a>
+              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Action </a>    
+              &nbsp;or &nbsp;    
+              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Status Update</a>
+
+              <br><br>
+              {% if goal.caregiver %}
+                <a href="#">{{goal.caregiver}}</a>&nbsp;
+              {% endif %}
 
             </div>
 
             <div class="clearfix"></div> 
 
           </div>  <!-- Goal 1 Collapse -->
+          {% endfor %}
+          {% else %}
+            <h2>No goals are available at this time. Add a goal using the "Add Goal" form below to add a new goal</h2>
+          {% endif %}
 
         </div>  <!-- Main page Collapse -->
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->

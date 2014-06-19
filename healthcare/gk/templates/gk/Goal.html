@@ -43,7 +43,7 @@
         <div class="span9 well">      <!-- Main page -->
           <div class="row-fluid">
             <div class="span7">         <!-- Goal graph / Title -->
-              <h2>Weight</h2>
+              <h2>{{goal.name}}</h2>
               <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
             </div>
             <div class="span5">         <!-- Status Updates -->
@@ -53,7 +53,7 @@
 
                 <textarea class="form-control" rows="2" placeholder="Enter a status update about this goal here." style="width:96%"></textarea><br>
                 <div class="form-group" id="Update-type">
-                  <label for="Update-type"> Goal name:</label>
+                  <label for="Update-type"> Status Value:</label>
                   <input type="number" class="form-control pull-left" id="Update-type" placeholder="Enter a Number">
                 </div>
                 <button type="submit" class="btn btn-default pull-right">Post</button>
@@ -77,51 +77,42 @@
 
           <div class="row-fluid">
             <div class="span7">             <!-- Pending/Completed Actions -->
+              
               <h3>Pending Actions</h3>
 
-              <p>
-                <button type="button" class="btn btn-primary btn-small">Complete</button>
-                &nbsp;&nbsp;
-                <span class="bg-warning">Weigh Billy on January 3rd, 2014</span>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-              </p>
+              {% if pending_actions %}
+              {% for action in pending_actions %}
 
               <p>
                 <button type="button" class="btn btn-primary btn-small">Complete</button>
                 &nbsp;&nbsp;
-                <span class="bg-warning">Appointment with Dr. Martin on January 8th, 2014</span>
+                <span class="bg-warning">{{action.name}} on {{action.dealine}}</span>
                 &nbsp;&nbsp;
                 <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
               </p>
 
-              <p>
-                <button type="button" class="btn btn-primary btn-small">Complete</button>
-                &nbsp;&nbsp;
-                <span class="bg-warning">Appointment with Dr. Harvard on February 12th, 2014</span>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-              </p>
+              {% endfor %}
+              {% else %}
+                <p> There are no pending actions for this goal. </p>
+              {% endif %}
 
               <hr>
 
               <h3>Completed Actions</h3>
+              {% if completed_actions %}
+              {% for action in completed_actions %}
 
               <p>
                 <span class="bg-success">&nbsp;&check;&nbsp;</span>
                 &nbsp;
-                <span class="bg-success">Weigh Billy on December 3rd, 2013</span>
+                <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
                 &nbsp;&nbsp;
                 <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
               </p>
-
-              <p>
-                <span class="bg-success">&nbsp;&check;&nbsp;</span>
-                &nbsp;
-                <span class="bg-success">Weigh Billy on November 3rd, 2013</span>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-              </p>
+              {% endfor %}
+              {% else %}
+              <p> There are no completed actions for this goal. </p>
+              {% endif %}
 
             </div>
             <div class="span5">             <!-- New Action Form -->

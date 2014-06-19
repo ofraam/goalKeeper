@@ -8,8 +8,10 @@ Update 0.1 by Logan on 6/16/2014
 
 """
 from django.db import models
+import datetime
 
 # Create your models here.
+
 
 
 class Caregiver(models.Model):
@@ -21,7 +23,9 @@ class Caregiver(models.Model):
     name = models.CharField(max_length=50)
     role = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=25)
+    def __unicode__(self):
+        return self.name
 
 class Patient(models.Model):
     """
@@ -29,6 +33,9 @@ class Patient(models.Model):
     """
     name = models.CharField(max_length=100)
     caregiver = models.ManyToManyField(Caregiver)
+    def __unicode__(self):
+        return self.name
+
 
 class Goal(models.Model):
     """
@@ -39,6 +46,8 @@ class Goal(models.Model):
     patient = models.ForeignKey(Patient)
     notes = models.TextField()
     active = models.BooleanField()
+    def __unicode__(self):
+        return self.name
 
 '''
 class StatusUpdateType(models.Model):
@@ -52,11 +61,13 @@ class StatusUpdateType(models.Model):
 class StatusUpdate(models.Model):
     #ctype = models.ForeignKey(StatusUpdateType)
     goal = models.ForeignKey(Goal)
-    time = models.DateField(auto_now_add=True)
+    time = models.DateTimeField('date published')
+    data_value = models.IntegerField()
     reporting_caregiver = models.ForeignKey(Caregiver)
     notes = models.TextField()
     status = models.CharField(max_length = 100)
-    data_value = models.IntegerField()
+    def __unicode__(self):
+        return self.notes
 
 '''         will fall under caregiver / contact category if necessary
 class FamilyMember(models.Model):
@@ -71,5 +82,6 @@ class Action(models.Model):
     notes = models.TextField()      #possibly unnecessary?
     caregiver = models.ForeignKey(Caregiver)
     deadline = models.DateField()
-    date_added = models.DateField(auto_now_add=True)
+    def __unicode__(self):
+        return self.name
     
