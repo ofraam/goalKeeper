@@ -18,18 +18,43 @@ def goal(request, goal_name):
 	actions = Action.objects.filter(goal = goal)
 	completed_actions = [a for a in actions if a.completed]
 	pending_actions = [a for a in actions if not a.completed]
+	recent_status_updates = StatusUpdate.objects.filter(goal = goal).order_by('-pub_time')[:3]
+	caregivers = Caregiver.objects.filter(goal = goal)
 	context = {'goal' : goal,
 			   'actions' : actions,
 			   'pending_actions' : pending_actions,
 			   'completed_actions' : completed_actions,
+			   'recent_status_updates' : recent_status_updates,
+			   'caregivers' : caregivers,
 			   }
 	return render(request, 'gk/Goal.html', context)
 
 def action(request):
-	return render(request, 'gk/Actions.html')
+	actions = Action.objects.order_by('-deadline')
+	completed_actions = [a for a in actions if a.completed]
+	pending_actions = [a for a in actions if not a.completed]
+	context = {'actions' : actions,
+			   'pending_actions' : pending_actions,
+			   'completed_actions' : completed_actions,
+			   }
+	return render(request, 'gk/Actions.html', context)
 
 def contacts(request):
-	return render(request, 'gk/Contacts.html')
+	caregivers = Caregiver.objects.all()
+	context = {'caregivers' : caregivers,
+			   }
+	return render(request, 'gk/Contacts.html', context)
 
 def profile(request):
-	return render(request, 'gk/Profile.html')
+	patient = Patient.objects.all()[:1]
+	updates = StatusUpdate.objects.order_by('-pub_time')[:5]
+	context = {'patient' : patient,
+			   'updates' : updates,
+			   }
+	return render(request, 'gk/Profile.html', context)
+
+
+
+
+
+

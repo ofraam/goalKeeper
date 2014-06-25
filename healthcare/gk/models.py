@@ -1,11 +1,5 @@
 """
-Models from template on genmymodel
-
-Update 0.1 by Logan on 6/16/2014 
-    -Not going off of the genmymodel as much now
-    -Added fields to caregiver, goal, and action
-    -Commented out status type and family member
-
+Models from template on genmymodel, with updates
 """
 from django.db import models
 import datetime
@@ -61,7 +55,8 @@ class StatusUpdateType(models.Model):
 class StatusUpdate(models.Model):
     #ctype = models.ForeignKey(StatusUpdateType)
     goal = models.ForeignKey(Goal)
-    time = models.DateTimeField('date published')
+    #date = models.DateField()
+    pub_time = models.DateTimeField()
     data_value = models.IntegerField()
     reporting_caregiver = models.ForeignKey(Caregiver)
     notes = models.TextField()

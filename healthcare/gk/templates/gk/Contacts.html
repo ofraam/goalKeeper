@@ -40,17 +40,20 @@
     <div class="container-fluid">     
       <div class="row-fluid">
         <div class="span8">      <!-- Main page -->
-          <div class="well">
-            <h3 id="Member_name">Dr. Logan Martin  <small style="color:black;" id="Team_role"> Pedatrician</small> </h4>  
-            <strong>Phone: </strong><span id="Phone_number">(123)-456-7890 </span>
-            <strong>Email: </strong><span id="Email-address">healthykids@fakeemail.net</span>
-          </div>
+
+          {% if caregivers %}
+          {% for caregiver in caregivers %}
 
           <div class="well">
-            <h3 id="Member_name">Dr. John Harvard  <small style="color:black;" id="Team_role"> Therapist </small> </h4>  
-            <strong>Phone: </strong><span id="Phone_number">(555)-555-5555 </span>
-            <strong>Email: </strong><span id="Email-address">mindtricks@fakeemail.net</span>
+            <h3 id="Member_name">{{caregiver.name}}<small style="color:black;" id="Team_role"> {{caregiver.role}}</small> </h4>  
+            <strong>Phone: </strong><span id="Phone_number">{{caregiver.phone}} </span>
+            <strong>Email: </strong><span id="Email-address">{{caregiver.email}}</span>
           </div>
+
+          {% endfor %}
+          {% else %}
+            <p> You have entered no caregivers. <p>
+          {% endif %}
 
         </div>
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->

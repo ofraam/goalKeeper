@@ -53,23 +53,30 @@
             
           </div>
           <div class="span6">
+            {% for patient in patient %}
             <div id="User_info">
-              <h2 id="User_name">Billy Smith</h2>
+              <h2 id="User_name">{{patient.name}}</h2>
               <p id="User_age"><strong>Age: </strong>12</p>
               <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p>
             </div>
+            {% endfor %}
 
             <div id="Gen_updates">
 
-              <div id="Gen_update" class="bg-info">
-                <p >Billy got sick this and lost a lot of weight. He is feeling better now and should be putting some of that weight back on soon.<br><small>Posted on 12/2/2013 2:37pm</small></p>
-              </div>
+              {% if updates %}
+              {% for update in updates %}
 
+              <div id="Gen_update" class="bg-info">
+                <p >{{update.notes}}<br><small>Posted on {{update.pub_time}}</small></p>
+              </div>
+              
               <br>
+              
+              {% endfor %}
+              {% else %}
+                <p> You have no updates. <p>
+              {% endif %}
 
-              <div id="Gen_update" class="bg-info">
-                <p >This month Billy put on a little weight. He has been a little less active since soccer ended mid October.<br><small>Posted on 11/6/2013 7:12pm</small></p>
-              </div>
             </div>
           </div>
         </div>

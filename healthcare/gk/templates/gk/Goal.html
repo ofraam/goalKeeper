@@ -60,17 +60,22 @@
                 <div class="clearfix"></div>
               </form>
 
+
+
               <h3>Recent Status Updates</h3>
+              {% if recent_status_updates %}
+              {% for status_update in recent_status_updates %}
 
               <div id="status udpdate" class="bg-info">
-                <p >Billy got sick this and lost a lot of weight. He is feeling better now and should be putting some of that weight back on soon.<br><small>Posted on 12/2/2013 2:37pm</small></p>
+                <p >{{status_update.notes}}<br><small>Posted on {{status_update.pub_time}}</small></p>
               </div>
-
               <br>
 
-              <div id="status udpdate" class="bg-info">
-                <p >This month Billy put on a little weight. He has been a little less active since soccer ended mid October.<br><small>Posted on 11/6/2013 7:12pm</small></p>
-              </div>
+              {% endfor %}
+              {% else %}
+                There are no status updates available for this goal.
+              {% endif %}
+
             </div>
           </div>
 
@@ -81,17 +86,17 @@
               <h3>Pending Actions</h3>
 
               {% if pending_actions %}
-              {% for action in pending_actions %}
+                {% for action in pending_actions %}
 
-              <p>
-                <button type="button" class="btn btn-primary btn-small">Complete</button>
-                &nbsp;&nbsp;
-                <span class="bg-warning">{{action.name}} on {{action.dealine}}</span>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-              </p>
+                  <p>
+                    <button type="button" class="btn btn-primary btn-small">Complete</button>
+                    &nbsp;&nbsp;
+                    <span class="bg-warning"> {{action.name}} on {{action.deadline}} </span>
+                    &nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+                  </p>
 
-              {% endfor %}
+                {% endfor %}
               {% else %}
                 <p> There are no pending actions for this goal. </p>
               {% endif %}
@@ -152,19 +157,24 @@
           <div class="well" id="contacts">
             <h3>Care Givers for this Goal</h3>
             <ul>
-              <li><a href="#">Dr. Logan Martin</a></li>
-              <li><a href="#">Dr. John Harvard</a></li>
-              <li>
+              {% if caregivers %}
+              {% for caregiver in caregivers %}
+              <li><a href="#">{{caregiver.name}}</a></li>
+              {% endfor %}
+              {% endif %}
+              
+              <!--<li>
                 <form>
                   <div id="caregiver_list">
                     <input type="checkbox" class="form-control" name="caregiver" value="Dr. Dinosaur"> Dr. Dinosaur</input>
                     <br>
                     <input type="checkbox" class="form-control" name="caregiver" value="Dr. Dre"> Dr. Dre</input>
                   </div>
+
                   <button type="submit" class="btn btn-default btn-small"><i class="icon icon-plus"></i> Add Caregiver </button>
                 </form>
-              </li> 
-
+              </li> -->
+            </ul>
           </div>
         </div>
       </div>
