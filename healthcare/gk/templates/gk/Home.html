@@ -91,8 +91,10 @@
           <br>
           <div class="well" id="add_goal_form">       <!-- Add Goal Form -->
             <h3> Add a Goal</h3>
-            <form role="form">
-              <div class="form-group" id="Goal_name">
+            <form role="form" method="post">{% csrf_token %}
+              {{ AddGoalForm.as_p }}
+              <input type="submit" value="Submit" class="btn btn-default" />
+            <!--  <div class="form-group" id="Goal_name">
                 <label for="Goal_name"> Goal name:</label>
                 <input type="text" class="form-control" id="Goal_name" placeholder="Enter Goal Name">
               </div>
@@ -108,7 +110,7 @@
                 <label for="Goal_description">Description:</label>
                 <textarea class="form-control" rows="2" id="Goal_description" placeholder="Enter a description for this goal"></textarea>
               </div>
-              <button type="submit" class="btn btn-default">Submit</button>
+              <button type="submit" class="btn btn-default">Submit</button> -->
             </form>
           </div>
         </div>    <!-- RSM Collapse -->
