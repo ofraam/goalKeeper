@@ -71,9 +71,11 @@
           <div class="well" id="new_contact">
             <h3>Add New Contact:</h3>
 
-            <form role="form">
+            <form role="form" method="post">{% csrf_token %}
+              {{ AddContactForm.as_p }}
+              <input type="submit" value="Submit" class="btn btn-primary" />
 
-                <div class="form-group" id="Contact_name">
+            <!--    <div class="form-group" id="Contact_name">
                   <label for="Contact_name">Contact: </label>
                   <input type="text" class="form-control" id="Contact_name" placeholder="Enter Contact Name"></input>
                 </div>
@@ -94,7 +96,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-small">Submit</button>
-
+                -->
               </form>
           </div>
         </div>

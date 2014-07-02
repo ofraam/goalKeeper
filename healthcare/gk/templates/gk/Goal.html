@@ -44,13 +44,18 @@
           <div class="row-fluid">
             <div class="span7">         <!-- Goal graph / Title -->
               <h2>{{goal.name}}</h2>
-              <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
+              <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;"> 
+
             </div>
+
             <div class="span5">         <!-- Status Updates -->
               <h3>Add Status Update</h3>
 
-              <form role="form" class="well">
-
+              <form role="form" method="post" class="well">{% csrf_token %}
+                {{ AddStatusForm.as_p }}
+                <input type="hidden" name="key" value="stat" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                <!--
                 <textarea class="form-control" rows="2" placeholder="Enter a status update about this goal here." style="width:96%"></textarea><br>
                 <div class="form-group" id="Update-type">
                   <label for="Update-type"> Status Value:</label>
@@ -58,10 +63,11 @@
                 </div>
                 <button type="submit" class="btn btn-default pull-right">Post</button>
                 <div class="clearfix"></div>
+                -->
               </form>
 
 
-
+              <div>
               <h3>Recent Status Updates</h3>
               {% if recent_status_updates %}
               {% for status_update in recent_status_updates %}
@@ -75,10 +81,11 @@
               {% else %}
                 There are no status updates available for this goal.
               {% endif %}
+              </div>
 
             </div>
           </div>
-
+          <div class="clearfix"></div>
 
           <div class="row-fluid">
             <div class="span7">             <!-- Pending/Completed Actions -->
@@ -121,10 +128,14 @@
 
             </div>
             <div class="span5">             <!-- New Action Form -->
-              <h3>Add an Action for this Goal</h3>
+              <h3>Add Action for this Goal</h3>
 
-              <form role="form" class="well">
-
+              <form role="form" method="post" class="well">{% csrf_token %}
+                {{ AddActionForm_GoalPage.as_p }}
+                <input type="hidden" name="key" value="act" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                
+                <!--
                 <div class="form-group" id="Action">
                   <label for="Action">Action: </label>
                   <input type="text" class="form-control" id="Action" placeholder="Enter Action">
@@ -135,6 +146,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-small">Submit</button>
+                -->
 
               </form>
             </div>

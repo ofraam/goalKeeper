@@ -93,6 +93,13 @@
               <li><a href="#">Recommendation 3</a></li>
             </ul>
           </div>
+          <div class="well" id="addActionForm">
+            <h3>Add Action</h3>
+            <form role="form" method="post">{% csrf_token %}
+              {{ AddActionForm_ActionPage.as_p }}
+              <input type="submit" value="Submit" class="btn btn-primary" />
+            </form>
+          </div>
         </div>
       </div>
 
