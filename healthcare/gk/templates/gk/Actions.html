@@ -40,17 +40,23 @@
     <div class="container-fluid">     
       <div class="row-fluid">
         <div class="span8 well">      <!-- Main page -->
-          <h3>Pending Actions</h3>
+          <h3>Pending Actions {{words}}</h3>
           {% if pending_actions %}
             {% for action in pending_actions %}
               <p>
-                <button type="button" class="btn btn-primary btn-small">Complete</button>
-                &nbsp;&nbsp;
-                <span class="bg-info">{{action.goal}}</span>
-                &nbsp;&nbsp;
-                <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+
+                <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                  <input type="hidden" name="actionName" value={{action.id}} />
+                  <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small" />
+                
+
+                  &nbsp;&nbsp;
+                  <span class="bg-info">{{action.goal}}</span>
+                  &nbsp;&nbsp;
+                  <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
+                  &nbsp;&nbsp;
+                  <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                </form>
               </p>
 
             {% endfor %}
@@ -66,13 +72,16 @@
             {% for action in completed_actions %}
 
             <p>
-              <span class="bg-success">&nbsp;&check;&nbsp;</span>
-              &nbsp;
-              <span class="bg-info">{{action.goal}}</span>
-              &nbsp;
-              <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
-              &nbsp;&nbsp;
-              <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
+              <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <input type="hidden" name="actionName" value={{action.id}} />
+                <span class="bg-success">&nbsp;&check;&nbsp;</span>
+                &nbsp;
+                <span class="bg-info">{{action.goal}}</span>
+                &nbsp;
+                <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
+                &nbsp;&nbsp;
+                <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+              </form>
             </p>
 
             {% endfor %}
@@ -97,7 +106,7 @@
             <h3>Add Action</h3>
             <form role="form" method="post">{% csrf_token %}
               {{ AddActionForm_ActionPage.as_p }}
-              <input type="submit" value="Submit" class="btn btn-primary" />
+              <input type="submit" value="Submit" name="actionForm" class="btn btn-primary" />
             </form>
           </div>
         </div>

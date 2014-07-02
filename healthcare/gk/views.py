@@ -99,28 +99,41 @@ def goal(request, goal_name):
 	return render(request, 'gk/Goal.html', context)
 
 
-
 def action(request):
+	
 	if (request.method == 'POST'):
-		form = AddActionForm_ActionPage(request.POST)
-		if form.is_valid():
-			goal_name = form.cleaned_data['goal']
-			goal = get_object_or_404(Goal, name=goal_name)
-			name = form.cleaned_data['action']
-			deadline = form.cleaned_data['due_Date']
-			notes = "N/A"
-			caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
-			completed = False
-			NEW_ACTION = Action.objects.create(goal = goal, 
-											   name = name, 
-											   deadline=deadline, 
-											   caregiver=caregiver, 
-											   notes=notes, 
-											   completed=completed,
-											   )
+		if ('actionForm' in request.POST):
+			form = AddActionForm_ActionPage(request.POST)
+			if form.is_valid():
+				goal_name = form.cleaned_data['goal']
+				goal = get_object_or_404(Goal, name=goal_name)
+				name = form.cleaned_data['action']
+				deadline = form.cleaned_data['due_Date']
+				notes = "N/A"
+				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				completed = False
+				NEW_ACTION = Action.objects.create(goal = goal, 
+												   name = name, 
+												   deadline=deadline, 
+												   caregiver=caregiver, 
+												   notes=notes, 
+												   completed=completed,
+												   )
+				
+				return HttpResponseRedirect('')
+
+		elif ('Complete' in request.POST):
+			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
+			action.completed = True
+			action.save()
 			return HttpResponseRedirect('')
-		else:
-			form = AddActionForm_ActionPage()
+		elif ('remove' in request.POST):
+			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
+			action.delete()
+			return HttpResponseRedirect('')
+
+	else:
+		form = AddActionForm_ActionPage()
 
 	actions = Action.objects.order_by('-deadline')
 	completed_actions = [a for a in actions if a.completed]
@@ -206,6 +219,9 @@ class AddActionForm_GoalPage(forms.Form):
 class AddStatusForm(forms.Form):
 	status = forms.CharField()
 	data_Value = forms.IntegerField()
+
+class complete_button(forms.Form):
+	pass
 
 
 
