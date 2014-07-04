@@ -41,33 +41,30 @@
       <div class="row-fluid">
         <div class="span8 well">
           <div class="span6">      <!-- Main page -->
-            <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">
+            <div class="offset1">
+              {% for patient in patient %}
+              <div id="User_info">
+                <h2 id="User_name">{{patient.name}}</h2>
+                <p id="User_age"><strong>Age: </strong>12</p>
+                <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p>
+              </div>
+              {% endfor %}
+            </div>
+            <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive" style="max-width:85%">
             <br>
-            <h3>New Update</h3>
-
-            <form role="form">
-              <textarea class="form-control" rows="3" placeholder="Enter an update about Billy here." style="width:96%"></textarea><br>
-              <button type="submit" class="btn btn-default pull-right">Post</button>
-            </form>
-            <br>
+            
             
           </div>
           <div class="span6">
-            {% for patient in patient %}
-            <div id="User_info">
-              <h2 id="User_name">{{patient.name}}</h2>
-              <p id="User_age"><strong>Age: </strong>12</p>
-              <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p>
-            </div>
-            {% endfor %}
+            
 
             <div id="Gen_updates">
-
+              <h3>Updates:</h3>
               {% if updates %}
               {% for update in updates %}
 
               <div id="Gen_update" class="bg-info">
-                <p >{{update.notes}}<br><small>Posted on {{update.pub_time}}</small></p>
+                <p >{{update.status}}<br><small>Posted on {{update.pub_time}} for {{update.goal}}</small></p>
               </div>
               
               <br>

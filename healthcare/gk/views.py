@@ -13,18 +13,23 @@ def home(request):
 		form = AddGoalForm(request.POST)
 		if form.is_valid():
 			name = form.cleaned_data['goal_Name']
-			type = form.cleaned_data['Type']
+			data_type = form.cleaned_data['Type']
 			notes = form.cleaned_data['Description']
 			active = True
 			patient = get_object_or_404(Patient, name="Billy Smith")
-			caregiverName = form.cleaned_data['caregiver']
-			caregiver = get_object_or_404(Caregiver, name = caregiverName)
+			caregiver = []
+			caregiverNames = form.cleaned_data['caregivers']
+			for caregiverName in caregiverNames:
+				caregiver.append(get_object_or_404(Caregiver, name = caregiverName))
 			newGoal = Goal.objects.create(name = name, 
 										  notes = notes, 
 										  active = active, 
-										  caregiver = caregiver, 
 										  patient = patient,
+										  data_type = data_type,
 										  )
+
+			for c in caregiver:
+				newGoal.caregivers.add(c)
 			return HttpResponseRedirect('')
 	else:
 		form = AddGoalForm()
@@ -41,17 +46,15 @@ def home(request):
 
 def goal(request, goal_name):
 	if (request.method == 'POST'):
-		if (request.POST['key'] == 'stat'):
+		if ('stat' in request.POST):
 			form = AddStatusForm(request.POST)
 			if form.is_valid():
-				notes = form.cleaned_data['status']
+				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
 				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
-				status = "N/A"
 				goal = get_object_or_404( Goal, name=goal_name)
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
-														 notes = notes,
 														 data_value=data_value,
 														 pub_time=pub_time,
 														 reporting_caregiver=reporting_caregiver,
@@ -59,23 +62,30 @@ def goal(request, goal_name):
 														 )
 				return HttpResponseRedirect('')
 		
-		elif (request.POST['key'] == 'act'):
+		elif ('act' in request.POST):
 			form = AddActionForm_GoalPage(request.POST)
 			if form.is_valid():
 				goal = get_object_or_404( Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				notes = "N/A"
 				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
 												   deadline=deadline, 
-												   caregiver=caregiver, 
-												   notes=notes, 
+												   caregiver=caregiver,
 												   completed=completed,
 												   )
 				return HttpResponseRedirect('')
+		elif ('Complete' in request.POST):
+			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
+			action.completed = True
+			action.save()
+			return HttpResponseRedirect('')
+		elif ('remove' in request.POST):
+			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
+			action.delete()
+			return HttpResponseRedirect('')
 
 	else:
 		form1 = AddActionForm_GoalPage()
@@ -109,14 +119,12 @@ def action(request):
 				goal = get_object_or_404(Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				notes = "N/A"
 				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
 												   deadline=deadline, 
-												   caregiver=caregiver, 
-												   notes=notes, 
+												   caregiver=caregiver,
 												   completed=completed,
 												   )
 				
@@ -183,19 +191,25 @@ def profile(request):
 
 ############### Form Classes ###############
 
-
-
-class AddGoalForm(forms.Form):
-	type_choices = [('0', u'Qualitative'), 
-					('1', u'Quantitative'),
-					]
+def caregiverChoices():
 	caregiver_choices = []
 	for c in Caregiver.objects.all():
 		caregiver_choices.append((c.name, c))
+	return caregiver_choices
+
+class AddGoalForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(AddGoalForm, self).__init__(*args, **kwargs)
+		self.fields['caregivers'] = forms.MultipleChoiceField(
+				choices=caregiverChoices() )
+	type_choices = [('0', u'Better/Same/Worse'), 
+					('1', u'Number Value'),
+					]
+	
 	goal_Name = forms.CharField(max_length = 30)
 	Type = forms.ChoiceField(type_choices)
 	Description = forms.CharField()
-	caregiver = forms.ChoiceField(caregiver_choices)
+	#caregivers = forms.MultipleChoiceField(caregiver_choices)
 
 class AddContactForm(forms.Form):
 	contact_Name = forms.CharField()
@@ -209,16 +223,16 @@ class AddActionForm_ActionPage(forms.Form):
 		goal_choices.append((g.name, g))
 
 	goal = forms.ChoiceField(goal_choices)
-	action = forms.CharField()
+	action = forms.CharField(max_length=32)
 	due_Date = forms.DateField()
 
 class AddActionForm_GoalPage(forms.Form):
-	action = forms.CharField()
+	action = forms.CharField(max_length=32)
 	due_Date = forms.DateField()
 
 class AddStatusForm(forms.Form):
-	status = forms.CharField()
 	data_Value = forms.IntegerField()
+	notes = forms.CharField()
 
 class complete_button(forms.Form):
 	pass

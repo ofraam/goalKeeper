@@ -21,12 +21,17 @@ class Caregiver(models.Model):
     def __unicode__(self):
         return self.name
 
+
+
 class Patient(models.Model):
     """
     to get goals, use patient.goal_set
     """
     name = models.CharField(max_length=100)
     caregiver = models.ManyToManyField(Caregiver)
+    #photo = models.ImageField()
+    age = models.IntegerField()
+    info = models.TextField()
     def __unicode__(self):
         return self.name
 
@@ -36,45 +41,30 @@ class Goal(models.Model):
     to get the status updates, use goal.status_update_set
     """
     name = models.CharField(max_length=100)
-    caregiver = models.ForeignKey(Caregiver)
+    caregivers = models.ManyToManyField(Caregiver)
     patient = models.ForeignKey(Patient)
     notes = models.TextField()
     active = models.BooleanField()
+    data_type = models.IntegerField()
     def __unicode__(self):
         return self.name
 
-'''
-class StatusUpdateType(models.Model):
-    name = models.CharField(max_length = 100)
-    patient = models.ForeignKey(Patient)
-    goal = models.ForeignKey(Goal)
-    frequency = models.IntegerField()       # how is it defined?
-    value_options = models.CharField(max_length = 100)
-'''
+
 
 class StatusUpdate(models.Model):
-    #ctype = models.ForeignKey(StatusUpdateType)
     goal = models.ForeignKey(Goal)
-    #date = models.DateField()
     pub_time = models.DateTimeField()
     data_value = models.IntegerField()
     reporting_caregiver = models.ForeignKey(Caregiver)
-    notes = models.TextField()
-    status = models.CharField(max_length = 100)
+    status = models.TextField()
     def __unicode__(self):
-        return self.notes
+        return self.status
 
-'''         will fall under caregiver / contact category if necessary
-class FamilyMember(models.Model):
-    name = models.CharField(max_length=100)
-    patient = models.ForeignKey(Patient)
-'''
 
 class Action(models.Model):
     goal = models.ForeignKey(Goal)
     completed = models.BooleanField()
     name = models.CharField(max_length=100)
-    notes = models.TextField()      #possibly unnecessary?
     caregiver = models.ForeignKey(Caregiver)
     deadline = models.DateField()
     def __unicode__(self):

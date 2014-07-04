@@ -51,20 +51,34 @@
             </div>
 
             <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
-              <h4>{{goal.notes}}</h4>
+              <div class="row-fluid">
+                <div class="span7">
+                  <h4>{{goal.notes}}</h4>
+                  
+                  <br>
+                  <span class="text-center"><a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">View this goal!</a></span>
 
-              <a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">You have pending actions for this goal!</a>
 
-              <br><br>
 
-              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Action </a>    
-              &nbsp;or &nbsp;    
-              <a href="#" class="btn btn-default"><i class="icon icon-plus"></i>Add Status Update</a>
-
-              <br><br>
-              {% if goal.caregiver %}
-                <a href="#">{{goal.caregiver}}</a>&nbsp;
-              {% endif %}
+                  <br><br>
+                </div>
+                <div class="span5">
+                  <h4>Pending Actions:</h4>
+                  {% for action in actions %}
+                    {% if action.goal == goal %}
+                      {% if not action.completed %}
+                        <p>{{action.name}} <small> on {{action.deadline}}</small></p>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+                {% if goal.caregivers %}
+                  {% for c in goal.caregivers.all %}
+                    <a href="#">{{c}}</a>&nbsp;
+                  {% endfor %}
+                {% endif %}
+              
 
             </div>
 

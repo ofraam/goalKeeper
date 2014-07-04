@@ -53,7 +53,7 @@
 
               <form role="form" method="post" class="well">{% csrf_token %}
                 {{ AddStatusForm.as_p }}
-                <input type="hidden" name="key" value="stat" />
+                <input type="hidden" name="stat" />
                 <input type="submit" value="Submit" class="btn btn-primary" />
                 <!--
                 <textarea class="form-control" rows="2" placeholder="Enter a status update about this goal here." style="width:96%"></textarea><br>
@@ -73,7 +73,7 @@
               {% for status_update in recent_status_updates %}
 
               <div id="status udpdate" class="bg-info">
-                <p >{{status_update.notes}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+                <p >Value: {{status_update.data_value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
               </div>
               <br>
 
@@ -94,14 +94,20 @@
 
               {% if pending_actions %}
                 {% for action in pending_actions %}
+                <p>
 
-                  <p>
-                    <button type="button" class="btn btn-primary btn-small">Complete</button>
+                  <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="hidden" name="actionName" value={{action.id}} />
+                    <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small" />
+                  
+
+                    
                     &nbsp;&nbsp;
-                    <span class="bg-warning"> {{action.name}} on {{action.deadline}} </span>
+                    <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
                     &nbsp;&nbsp;
-                    <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-                  </p>
+                    <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                  </form>
+                </p>
 
                 {% endfor %}
               {% else %}
@@ -115,12 +121,15 @@
               {% for action in completed_actions %}
 
               <p>
+              <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <input type="hidden" name="actionName" value={{action.id}} />
                 <span class="bg-success">&nbsp;&check;&nbsp;</span>
                 &nbsp;
                 <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
                 &nbsp;&nbsp;
-                <button type="button" class="btn btn-danger btn-small">&times; Remove</button>
-              </p>
+                <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+              </form>
+            </p>
               {% endfor %}
               {% else %}
               <p> There are no completed actions for this goal. </p>
@@ -132,7 +141,7 @@
 
               <form role="form" method="post" class="well">{% csrf_token %}
                 {{ AddActionForm_GoalPage.as_p }}
-                <input type="hidden" name="key" value="act" />
+                <input type="hidden" name="act" />
                 <input type="submit" value="Submit" class="btn btn-primary" />
                 
                 <!--
