@@ -41,53 +41,53 @@
         <div class="span8">      <!-- Main page -->
 
           {% if latest_goals %}
-          {% for goal in latest_goals %}
-          <div id="{{goal.name}}" class="well">
+            {% for goal in latest_goals %}
+              <div id="{{goal.name}}" class="well">
 
-            <h2><a href="/goalkeeper/goal/{{goal.name}}">{{goal.name}}</a></h2>     <!-- Goal 1 -->
+                <h2><a href="/goalkeeper/goal/{{goal}}">{{goal.name}}</a></h2>     <!-- Goal 1 -->
 
-            <div class="span3">         <!-- Goal graph -->
-              <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
-            </div>
-
-            <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
-              <div class="row-fluid">
-                <div class="span7">
-                  <h4>{{goal.notes}}</h4>
-                  
-                  <br>
-                  <span class="text-center"><a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">View this goal!</a></span>
-
-
-
-                  <br><br>
+                <div class="span3">         <!-- Goal graph -->
+                  <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
                 </div>
-                <div class="span5">
-                  <h4>Pending Actions:</h4>
-                  {% for action in actions %}
-                    {% if action.goal == goal %}
-                      {% if not action.completed %}
-                        <p>{{action.name}} <small> on {{action.deadline}}</small></p>
-                      {% endif %}
+
+                <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
+                  <div class="row-fluid">
+                    <div class="span7">
+                      <h4>{{goal.notes}}</h4>
+                      
+                      <br>
+                      <span class="text-center"><a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">View this goal!</a></span>
+
+
+
+                      <br><br>
+                    </div>
+                    <div class="span5">
+                      <h4>Pending Actions:</h4>
+                      {% for action in actions %}
+                        {% if action.goal == goal %}
+                          {% if not action.completed %}
+                            <p>{{action.name}} <small> on {{action.deadline}}</small></p>
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                    {% if goal.caregivers %}
+                      {% for c in goal.caregivers.all %}
+                        <a href="#">{{c}}</a>&nbsp;
+                      {% endfor %}
                     {% endif %}
-                  {% endfor %}
+                  
+
                 </div>
-              </div>
-                {% if goal.caregivers %}
-                  {% for c in goal.caregivers.all %}
-                    <a href="#">{{c}}</a>&nbsp;
-                  {% endfor %}
-                {% endif %}
-              
 
-            </div>
+                <div class="clearfix"></div> 
 
-            <div class="clearfix"></div> 
-
-          </div>  <!-- Goal 1 Collapse -->
-          {% endfor %}
-          {% else %}
-            <h2>No goals are available at this time. Add a goal using the "Add Goal" form below to add a new goal</h2>
+              </div>  <!-- Goal 1 Collapse -->
+              {% endfor %}
+            {% else %}
+              <h2>No goals are available at this time. Add a goal using the "Add Goal" form below to add a new goal</h2>
           {% endif %}
 
         </div>  <!-- Main page Collapse -->

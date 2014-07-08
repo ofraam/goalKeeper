@@ -46,8 +46,24 @@ def home(request):
 
 def goal(request, goal_name):
 	if (request.method == 'POST'):
-		if ('stat' in request.POST):
-			form = AddStatusForm(request.POST)
+		if ('statQuant' in request.POST):
+			form = AddQuantStatusForm(request.POST)
+			if form.is_valid():
+				status = form.cleaned_data['notes']
+				data_value = form.cleaned_data['data_Value']
+				pub_time = datetime.datetime.now()
+				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				goal = get_object_or_404( Goal, name=goal_name)
+				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
+														 data_value=data_value,
+														 pub_time=pub_time,
+														 reporting_caregiver=reporting_caregiver,
+														 status=status,
+														 )
+				return HttpResponseRedirect('')
+
+		elif ('statQual' in request.POST):
+			form = AddQualStatusForm(request.POST)
 			if form.is_valid():
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
@@ -89,7 +105,8 @@ def goal(request, goal_name):
 
 	else:
 		form1 = AddActionForm_GoalPage()
-		form2 = AddStatusForm()
+		form2 = AddQuantStatusForm()
+		form3 = AddQualStatusForm()
 
 	goal = get_object_or_404( Goal, name=goal_name)
 	actions = Action.objects.filter(goal = goal)
@@ -97,14 +114,19 @@ def goal(request, goal_name):
 	pending_actions = [a for a in actions if not a.completed]
 	recent_status_updates = StatusUpdate.objects.filter(goal = goal).order_by('-pub_time')[:3]
 	caregivers = Caregiver.objects.filter(goal = goal)
+	qualDict = {0:'Worse',
+				1:'Same',
+				2:'Better'}
 	context = {'goal' : goal,
 			   'actions' : actions,
 			   'pending_actions' : pending_actions,
 			   'completed_actions' : completed_actions,
 			   'recent_status_updates' : recent_status_updates,
 			   'caregivers' : caregivers,
+			   'qualDict' : qualDict,
 			   'AddActionForm_GoalPage' : AddActionForm_GoalPage,
-			   'AddStatusForm' : AddStatusForm,
+			   'AddQuantStatusForm' : AddQuantStatusForm,
+			   'AddQualStatusForm' : AddQualStatusForm,
 			   }
 	return render(request, 'gk/Goal.html', context)
 
@@ -230,8 +252,16 @@ class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField(max_length=32)
 	due_Date = forms.DateField()
 
-class AddStatusForm(forms.Form):
+class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
+	notes = forms.CharField()
+
+class AddQualStatusForm(forms.Form):
+	choices = [('2', u'Better'),
+			   ('1', u'Same'),
+			   ('0', u'Worse'), 
+			   ]
+	data_Value = forms.ChoiceField(choices)
 	notes = forms.CharField()
 
 class complete_button(forms.Form):

@@ -89,3 +89,19 @@ span.bg-success{
 	padding-top: 5px;
 	padding-left: 5px; 
 }
+
+
+
+body {
+	min-width: 1200px;
+}
+
+.GSscroll {
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+.GAscroll {
+	max-height: 150px;
+	overflow-y: scroll; 
+}

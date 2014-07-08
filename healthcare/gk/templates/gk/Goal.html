@@ -44,43 +44,61 @@
           <div class="row-fluid">
             <div class="span7">         <!-- Goal graph / Title -->
               <h2>{{goal.name}}</h2>
+              
               <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;"> 
-
+              <br>
             </div>
 
             <div class="span5">         <!-- Status Updates -->
               <h3>Add Status Update</h3>
 
+              {% if goal.data_type == 1 %}
+
               <form role="form" method="post" class="well">{% csrf_token %}
-                {{ AddStatusForm.as_p }}
-                <input type="hidden" name="stat" />
+                {{ AddQuantStatusForm.as_p }}
+                <input type="hidden" name="statQuant" />
                 <input type="submit" value="Submit" class="btn btn-primary" />
-                <!--
-                <textarea class="form-control" rows="2" placeholder="Enter a status update about this goal here." style="width:96%"></textarea><br>
-                <div class="form-group" id="Update-type">
-                  <label for="Update-type"> Status Value:</label>
-                  <input type="number" class="form-control pull-left" id="Update-type" placeholder="Enter a Number">
-                </div>
-                <button type="submit" class="btn btn-default pull-right">Post</button>
-                <div class="clearfix"></div>
-                -->
+                
               </form>
 
+              {% elif goal.data_type == 0 %}
 
-              <div>
-              <h3>Recent Status Updates</h3>
-              {% if recent_status_updates %}
-              {% for status_update in recent_status_updates %}
+              <form role="form" method="post" class="well">{% csrf_token %}
+                {{ AddQualStatusForm.as_p }}
+                <input type="hidden" name="statQual" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                
+              </form>
 
-              <div id="status udpdate" class="bg-info">
-                <p >Value: {{status_update.data_value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
-              </div>
-              <br>
-
-              {% endfor %}
-              {% else %}
-                There are no status updates available for this goal.
               {% endif %}
+              
+
+              <h3>Recent Status Updates</h3>
+
+              <div id="recent_updates" class="GSscroll">
+                <div>
+                  {% if recent_status_updates %}
+                    {% for status_update in recent_status_updates %}
+
+                      <div id="status udpdate" class="bg-info">
+                        {% if goal.data_type == 1 %}
+                         <p >Value: {{status_update.data_value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+
+                        {% elif goal.data_type == 0 %}
+                          {% for key, value in qualDict.items %}
+                            {% if key == status_update.data_value %}
+                              <p >Value: {{value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    <br>
+
+                    {% endfor %}
+                  {% else %}
+                    There are no status updates available for this goal.
+                  {% endif %}
+                </div>
               </div>
 
             </div>
@@ -91,49 +109,53 @@
             <div class="span7">             <!-- Pending/Completed Actions -->
               
               <h3>Pending Actions</h3>
+              <div id="pendingscroll" class="GAscroll">
 
-              {% if pending_actions %}
-                {% for action in pending_actions %}
-                <p>
+                {% if pending_actions %}
+                  {% for action in pending_actions %}
+                  <p>
 
-                  <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="hidden" name="actionName" value={{action.id}} />
-                    <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small" />
-                  
-
+                    <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                      <input type="hidden" name="actionName" value={{action.id}} />
+                      <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small" />
                     
-                    &nbsp;&nbsp;
-                    <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
-                    &nbsp;&nbsp;
-                    <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
-                  </form>
-                </p>
 
-                {% endfor %}
-              {% else %}
-                <p> There are no pending actions for this goal. </p>
-              {% endif %}
+                      
+                      &nbsp;&nbsp;
+                      <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
+                      &nbsp;&nbsp;
+                      <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                    </form>
+                  </p>
+
+                  {% endfor %}
+                {% else %}
+                  <p> There are no pending actions for this goal. </p>
+                {% endif %}
+              </div>
 
               <hr>
 
               <h3>Completed Actions</h3>
-              {% if completed_actions %}
-              {% for action in completed_actions %}
+                <div class="GAscroll">
+                  {% if completed_actions %}
+                  {% for action in completed_actions %}
 
-              <p>
-              <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <input type="hidden" name="actionName" value={{action.id}} />
-                <span class="bg-success">&nbsp;&check;&nbsp;</span>
-                &nbsp;
-                <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
-                &nbsp;&nbsp;
-                <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
-              </form>
-            </p>
-              {% endfor %}
-              {% else %}
-              <p> There are no completed actions for this goal. </p>
-              {% endif %}
+                  <p>
+                    <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                      <input type="hidden" name="actionName" value={{action.id}} />
+                      <span class="bg-success">&nbsp;&check;&nbsp;</span>
+                      &nbsp;
+                      <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
+                      &nbsp;&nbsp;
+                      <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                    </form>
+                  </p>
+                  {% endfor %}
+                  {% else %}
+                  <p> There are no completed actions for this goal. </p>
+                  {% endif %}
+                </div>
 
             </div>
             <div class="span5">             <!-- New Action Form -->
