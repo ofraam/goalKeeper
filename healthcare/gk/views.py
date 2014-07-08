@@ -3,7 +3,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from gk.models import *
 from django import forms
+from chartit import DataPool, Chart
+from django.utils import simplejson
 import datetime
+import time
+from django.core import serializers
+
 
 # Create your views here.
 
@@ -34,7 +39,7 @@ def home(request):
 	else:
 		form = AddGoalForm()
 
-	latest_goals = Goal.objects.order_by('name')[:5]
+	latest_goals = Goal.objects.order_by('name')
 	actions = Action.objects.all()
 	context = {'latest_goals' : latest_goals,
 				'actions' : actions,
@@ -108,15 +113,54 @@ def goal(request, goal_name):
 		form2 = AddQuantStatusForm()
 		form3 = AddQualStatusForm()
 
+
+
 	goal = get_object_or_404( Goal, name=goal_name)
 	actions = Action.objects.filter(goal = goal)
 	completed_actions = [a for a in actions if a.completed]
 	pending_actions = [a for a in actions if not a.completed]
-	recent_status_updates = StatusUpdate.objects.filter(goal = goal).order_by('-pub_time')[:3]
+	recent_status_updates = StatusUpdate.objects.filter(goal = goal).order_by('-pub_time')
 	caregivers = Caregiver.objects.filter(goal = goal)
 	qualDict = {0:'Worse',
 				1:'Same',
 				2:'Better'}
+
+
+	goalChart_data = DataPool(
+		series = [
+			{'options': {
+				'source' : recent_status_updates},
+				'terms' : [
+					('pub_time', lambda d: time.mktime(d.timetuple())),
+					'data_value',
+					]}
+			]
+		)
+
+	goalChart = Chart(
+		datasource = goalChart_data,
+		series_options = [{
+			'options':{
+                'type': 'line',
+                'stacking': False},
+            'terms':{
+                'pub_time': [
+                'data_value']}
+         	}],
+         	chart_options = 
+         		{'title': {
+                   'text': goal.name},
+               'xAxis': {
+                    'title': {
+                       'text': 'Date'}
+                       }
+                },
+			x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%b-%d-%Y-%H:%M"), False)
+		)
+
+
+
+
 	context = {'goal' : goal,
 			   'actions' : actions,
 			   'pending_actions' : pending_actions,
@@ -127,6 +171,7 @@ def goal(request, goal_name):
 			   'AddActionForm_GoalPage' : AddActionForm_GoalPage,
 			   'AddQuantStatusForm' : AddQuantStatusForm,
 			   'AddQualStatusForm' : AddQualStatusForm,
+			   'goalChart' : goalChart,
 			   }
 	return render(request, 'gk/Goal.html', context)
 
@@ -239,14 +284,22 @@ class AddContactForm(forms.Form):
 	Email = forms.EmailField()
 	Phone = forms.CharField()
 
-class AddActionForm_ActionPage(forms.Form):
+
+def goalChoices():
 	goal_choices = []
 	for g in Goal.objects.all():
 		goal_choices.append((g.name, g))
+	return goal_choices
 
-	goal = forms.ChoiceField(goal_choices)
-	action = forms.CharField(max_length=32)
-	due_Date = forms.DateField()
+class AddActionForm_ActionPage(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
+		self.fields['goal'] = forms.ChoiceField(choices=goalChoices())
+		self.fields['action'] = forms.CharField(max_length=32)
+		self.fields['due_Date'] = forms.DateField()
+				 
+	
+	
 
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField(max_length=32)
