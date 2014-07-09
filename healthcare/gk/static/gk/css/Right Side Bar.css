@@ -97,12 +97,12 @@ body {
 }
 
 .GSscroll {
-	max-height: 200px;
+	max-height: 350px;
 	overflow-y: auto;
 }
 
 .GAscroll {
-	max-height: 150px;
+	max-height: 129px;
 	overflow-y: auto; 
 }
 
