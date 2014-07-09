@@ -98,10 +98,15 @@ body {
 
 .GSscroll {
 	max-height: 200px;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 .GAscroll {
 	max-height: 150px;
-	overflow-y: scroll; 
+	overflow-y: auto; 
+}
+
+.HAscroll{
+	max-height: 100px;
+	overflow-y: auto;
 }

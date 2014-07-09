@@ -14,6 +14,11 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script>
+      $(function() {
+        $( "#datepicker" ).datepicker();
+      });
+    </script>
     <style>
       body{
         padding-top: 70px
@@ -38,7 +43,7 @@
     </div>
     <div class="container-fluid">     
       <div class="row-fluid">
-        <div class="span8">      <!-- Main page -->
+        <div class="span9">      <!-- Main page -->
 
           {% if latest_goals %}
             {% for goal in latest_goals %}
@@ -47,7 +52,8 @@
                 <h2><a href="/goalkeeper/goal/{{goal}}">{{goal.name}}</a></h2>     <!-- Goal 1 -->
 
                 <div class="span3">         <!-- Goal graph -->
-                  <img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      
+                  <!--<img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      -->
+                  <h4>A graph will go here</h4>
                 </div>
 
                 <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
@@ -64,13 +70,15 @@
                     </div>
                     <div class="span5">
                       <h4>Pending Actions:</h4>
-                      {% for action in actions %}
-                        {% if action.goal == goal %}
-                          {% if not action.completed %}
-                            <p>{{action.name}} <small> on {{action.deadline}}</small></p>
+                      <div class="HAscroll">
+                        {% for action in actions%}
+                          {% if action.goal == goal %}
+                            {% if not action.completed %}
+                              <p>{{action.name}} <small> on {{action.deadline}}</small></p>
+                            {% endif %}
                           {% endif %}
-                        {% endif %}
-                      {% endfor %}
+                        {% endfor %}
+                      </div>
                     </div>
                   </div>
                     {% if goal.caregivers %}

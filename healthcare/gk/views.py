@@ -155,7 +155,7 @@ def goal(request, goal_name):
                        'text': 'Date'}
                        }
                 },
-			x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%b-%d-%Y-%H:%M"), False)
+			x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%m/%d/%y"), False)
 		)
 
 
@@ -267,7 +267,7 @@ def caregiverChoices():
 class AddGoalForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		super(AddGoalForm, self).__init__(*args, **kwargs)
-		self.fields['caregivers'] = forms.MultipleChoiceField(
+		self.fields['caregivers'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
 				choices=caregiverChoices() )
 	type_choices = [('0', u'Better/Same/Worse'), 
 					('1', u'Number Value'),
@@ -296,14 +296,19 @@ class AddActionForm_ActionPage(forms.Form):
 		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
 		self.fields['goal'] = forms.ChoiceField(choices=goalChoices())
 		self.fields['action'] = forms.CharField(max_length=32)
-		self.fields['due_Date'] = forms.DateField()
-				 
+		self.fields['due_Date'] = forms.DateField(widget=forms.DateInput(attrs=
+                                {
+                                    'class':'datepicker'
+                                }))
 	
 	
 
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField(max_length=32)
-	due_Date = forms.DateField()
+	due_Date = forms.DateField(widget=forms.TextInput(attrs=
+                                {
+                                    'class':'datepicker'
+                                }))
 
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
