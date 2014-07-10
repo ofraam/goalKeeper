@@ -13,16 +13,23 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
     <script>
-      $(function() {
-        $( "#datepicker" ).datepicker();
-      });
+    //   $(function() {
+    //     $( "#datepicker" ).datepicker();
+    //   });
     </script>
+        <script src="{% static 'gk/Highcharts-4.0.3/js/highcharts.js' %}"></script>
+
     <style>
       body{
         padding-top: 70px
       }
+
     </style>
   </head>
   <body>
@@ -36,7 +43,7 @@
             <li><a href="/goalkeeper/contacts">Contacts</a></li>
           </ul>
           <ul class="nav navbar-right">
-            <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">Demo User &nbsp;&nbsp;&nbsp;</p></li>
           </ul>
         </div>
       </div>
@@ -45,24 +52,28 @@
       <div class="row-fluid">
         <div class="span9">      <!-- Main page -->
 
-          {% if latest_goals %}
-            {% for goal in latest_goals %}
-              <div id="{{goal.name}}" class="well">
+          {% if goals_context %}
+            {% for goal_context in goals_context %}
+              <div id="{{goal_context.goal.name}}" class="well">
 
-                <h2><a href="/goalkeeper/goal/{{goal}}">{{goal.name}}</a></h2>     <!-- Goal 1 -->
+                <h2><a href="/goalkeeper/goal/{{goal_context.goal}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
 
-                <div class="span3">         <!-- Goal graph -->
+                <div class="span4">
+                 
+                  
+                <div style="width:400px; height:200px" id="goal_chart{{goal_context.goal.id}}">{{divs}}</div>   
+     <!-- Goal graph -->
                   <!--<img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      -->
-                  <h4>A graph will go here</h4>
+                 <!--  <h4>A graph will go here</h4> -->
                 </div>
 
-                <div class="span8">         <!-- Goal info, add action/status update, goal contacts -->
+                <div class="span7">         <!-- Goal info, add action/status update, goal contacts -->
                   <div class="row-fluid">
                     <div class="span7">
-                      <h4>{{goal.notes}}</h4>
+                      <h4>{{goal_context.goal.notes}}</h4>
                       
                       <br>
-                      <span class="text-center"><a href="/goalkeeper/goal/{{goal.name}}" class="btn btn-info">View this goal!</a></span>
+                      <span class="text-center"><a href="/goalkeeper/goal/{{goal_context.goal.name}}" class="btn btn-info">View this goal!</a></span>
 
 
 
@@ -72,7 +83,7 @@
                       <h4>Pending Actions:</h4>
                       <div class="HAscroll">
                         {% for action in actions%}
-                          {% if action.goal == goal %}
+                          {% if action.goal == goal_context.goal %}
                             {% if not action.completed %}
                               <p>{{action.name}} <small> on {{action.deadline}}</small></p>
                             {% endif %}
@@ -81,9 +92,9 @@
                       </div>
                     </div>
                   </div>
-                    {% if goal.caregivers %}
-                      {% for c in goal.caregivers.all %}
-                        <a href="#">{{c}}</a>&nbsp;
+                    {% if goal_context.goal.caregivers %}
+                      {% for c in goal_context.goal.caregivers.all %}
+                        <a href="/goalkeeper/contacts">{{c}}</a>&nbsp;
                       {% endfor %}
                     {% endif %}
                   
@@ -97,8 +108,10 @@
             {% else %}
               <h2>No goals are available at this time. Add a goal using the "Add Goal" form below to add a new goal</h2>
           {% endif %}
-
+         {% load chartit %}
+        {{charts|load_charts:divs}}
         </div>  <!-- Main page Collapse -->
+
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
           <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">   <!-- Profile picture -->
           <br>
