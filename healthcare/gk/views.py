@@ -23,7 +23,8 @@ def home(request):
 			data_type = form.cleaned_data['Type']
 			notes = form.cleaned_data['Description']
 			active = True
-			patient = get_object_or_404(Patient, name="Billy Smith")
+			patientName = Patient.objects.all()[0].name
+			patient = get_object_or_404(Patient, name=patientName)
 			caregiver = []
 			caregiverNames = form.cleaned_data['caregivers']
 			for caregiverName in caregiverNames:
@@ -127,7 +128,7 @@ def goal(request, goal_name):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				goal = get_object_or_404( Goal, name=goal_name)
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
@@ -143,7 +144,7 @@ def goal(request, goal_name):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				goal = get_object_or_404( Goal, name=goal_name)
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
@@ -159,7 +160,7 @@ def goal(request, goal_name):
 				goal = get_object_or_404( Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
@@ -256,7 +257,7 @@ def action(request):
 				goal = get_object_or_404(Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
