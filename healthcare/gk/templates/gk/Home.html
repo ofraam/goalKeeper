@@ -59,9 +59,9 @@
                 <h2><a href="/goalkeeper/goal/{{goal_context.goal}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
 
                 <div class="span4">
-                 
+                 <div class="row-fluid">
                   
-                <div style="width:400px; height:200px" id="goal_chart{{goal_context.goal.id}}">{{divs}}</div>   
+                <div style="height:200px" id="goal_chart{{goal_context.goal.id}}">{{divs}}</div>   </div>
      <!-- Goal graph -->
                   <!--<img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      -->
                  <!--  <h4>A graph will go here</h4> -->
@@ -118,9 +118,11 @@
           <div id="recs" class="well">
             <h3>Recommendations:</h3>
             <ul>
-              <li><a href="#" class="recs">Recommendation 1</a></li>
+<!--               <li><a href="#" class="recs">Recommendation 1</a></li>
               <li><a href="#" class="recs">Recommendation 2</a></li>
-              <li><a href="#" class="recs">Recommendation 3</a></li>
+              <li><a href="#" class="recs">Recommendation 3</a></li> -->
+              <li><p>Schedule appointment with GI</p></li>
+              <li><p>Update Bart's weight</p></li>              
             </ul>
           </div>
           <br>
