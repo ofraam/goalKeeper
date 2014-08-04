@@ -49,7 +49,7 @@
             <li><a href="/goalkeeper/contacts">Contacts</a></li>
           </ul>
           <ul class="nav navbar-right">
-            <li><p class="navbar-text navbar-right" style="color:#ffffff">Logan Martin &nbsp;&nbsp;&nbsp;</p></li>
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">Demo User &nbsp;&nbsp;&nbsp;</p></li>
           </ul>
         </div>
       </div>
@@ -76,12 +76,12 @@
 
                       <div id="status udpdate" class="bg-info">
                         {% if goal.data_type == 1 %}
-                         <p >Value: {{status_update.data_value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+                         <p >Value: {{status_update.data_value}}<br>Notes: {{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
 
                         {% elif goal.data_type == 0 %}
                           {% for key, value in qualDict.items %}
                             {% if key == status_update.data_value %}
-                              <p >Value: {{value}}<br>{{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+                              <p >Value: {{value}}<br>Notes: {{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
                             {% endif %}
                           {% endfor %}
                         {% endif %}
@@ -190,9 +190,11 @@
           <div id="recs" class="well">
             <h3>Recommendations:</h3>
             <ul>
-              <li><a href="#">Recommendation 1</a></li>
+<!--               <li><a href="#">Recommendation 1</a></li>
               <li><a href="#">Recommendation 2</a></li>
-              <li><a href="#">Recommendation 3</a></li>
+              <li><a href="#">Recommendation 3</a></li> -->
+                <li><p>Schedule appointment with GI</p></li>
+              <li><p>Update Bart's weight</p></li>
             </ul>
           </div>
           <div class="well" id="contacts">
@@ -200,7 +202,7 @@
             <ul>
               {% if caregivers %}
               {% for caregiver in caregivers %}
-              <li><a href="#">{{caregiver.name}}</a></li>
+              <li><a href="/goalkeeper/contacts">{{caregiver.name}}</a></li>
               {% endfor %}
               {% endif %}
             </ul>

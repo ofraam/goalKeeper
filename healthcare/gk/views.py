@@ -10,6 +10,8 @@ import time
 from django.core import serializers
 
 
+
+
 # Create your views here.
 
 
@@ -21,7 +23,8 @@ def home(request):
 			data_type = form.cleaned_data['Type']
 			notes = form.cleaned_data['Description']
 			active = True
-			patient = get_object_or_404(Patient, name="Billy Smith")
+			patientName = Patient.objects.all()[0].name
+			patient = get_object_or_404(Patient, name=patientName)
 			caregiver = []
 			caregiverNames = form.cleaned_data['caregivers']
 			for caregiverName in caregiverNames:
@@ -41,7 +44,75 @@ def home(request):
 
 	latest_goals = Goal.objects.order_by('name')
 	actions = Action.objects.all()
-	context = {'latest_goals' : latest_goals,
+	
+
+
+	goals_context = []
+	charts = []
+	divs = []
+	for g in latest_goals:
+		goal = get_object_or_404( Goal, name=g.name)
+		this_goal = {}
+		this_goal['chart']=[]
+		this_goal['div']=[]
+		this_goal['goal']=goal
+
+
+		recent_status_updates = StatusUpdate.objects.filter(goal = goal).order_by('-pub_time')
+		goalChart_data = DataPool(
+			series = [
+				{'options': {
+					'source' : recent_status_updates},
+					'terms' : [
+						('pub_time', lambda d: time.mktime(d.timetuple())),
+						'data_value',
+						]}
+				]
+			)
+
+		goalChart = Chart(
+			datasource = goalChart_data,
+			series_options = [{
+				'options':{
+	                'type': 'line',
+	                'stacking': False},
+	            'terms':{
+	                'pub_time': [
+	                'data_value']}
+	         	}],
+	         	chart_options = 
+	         		{'title': {
+	                   'text': goal.name},
+	               'xAxis': {
+	                    'title': {
+	                       'text': 'Date'}
+	                       }
+	                },
+				x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%m/%d/%y"), False)
+			)
+
+		
+		charts.append(goalChart)
+		divs.append("goal_chart"+str(goal.id))
+		goals_context.append(this_goal)
+
+	
+	if len(latest_goals)>0:
+		div_string=divs[0]
+	for i in range(1,len(latest_goals)):
+		div_string=div_string+','+'goal_chart'+str(latest_goals[i].id)
+	# div_string = str(divs).strip('[]')
+
+	#end try to add graphs
+	# context = {'latest_goals' : latest_goals,
+	# 			'actions' : actions,
+	# 			'AddGoalForm' : AddGoalForm,
+	# 			'goalChart' : goalChart_context,
+	# 			'goalChart_div':goalChartDiv
+	# 			}
+	context = {'goals_context' : goals_context,
+				'charts' : charts,
+				'divs' : div_string,
 				'actions' : actions,
 				'AddGoalForm' : AddGoalForm,
 				}
@@ -57,7 +128,7 @@ def goal(request, goal_name):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				goal = get_object_or_404( Goal, name=goal_name)
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
@@ -73,7 +144,7 @@ def goal(request, goal_name):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				goal = get_object_or_404( Goal, name=goal_name)
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
@@ -89,7 +160,7 @@ def goal(request, goal_name):
 				goal = get_object_or_404( Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
@@ -186,7 +257,7 @@ def action(request):
 				goal = get_object_or_404(Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = "Dr. Logan Martin")
+				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
