@@ -29,7 +29,7 @@ class Patient(models.Model):
     """
     name = models.CharField(max_length=100)
     caregiver = models.ManyToManyField(Caregiver)
-    photo = models.ImageField(upload_to='gk/static/gk/img')
+    #photo = models.ImageField()
     age = models.IntegerField()
     info = models.TextField()
     def __unicode__(self):

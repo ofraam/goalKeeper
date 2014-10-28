@@ -42,10 +42,10 @@ def home(request):
 	else:
 		form = AddGoalForm()
 
-
-
 	latest_goals = Goal.objects.order_by('name')
 	actions = Action.objects.all()
+	
+
 
 	goals_context = []
 	charts = []
@@ -110,18 +110,11 @@ def home(request):
 	# 			'goalChart' : goalChart_context,
 	# 			'goalChart_div':goalChartDiv
 	# 			}
-
-	patients = Patient.objects.all()
-	patient = patients[0]
-	pic = patient.photo.name.split("/")[-1]
-
 	context = {'goals_context' : goals_context,
 				'charts' : charts,
 				'divs' : div_string,
 				'actions' : actions,
 				'AddGoalForm' : AddGoalForm,
-				'patient': patient,
-				'pic': pic,
 				}
 	return render(request, 'gk/Home.html', context)
 
