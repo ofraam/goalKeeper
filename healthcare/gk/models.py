@@ -2,11 +2,10 @@
 Models from template on genmymodel, with updates
 """
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 # Create your models here.
-
-
 
 class Caregiver(models.Model):
     """
@@ -14,6 +13,7 @@ class Caregiver(models.Model):
     to get the patients, use caregiver.patient_set
     to get the actions, use caregiver.action_set
     """
+    user = models.OneToOneField(User)
     name = models.CharField(max_length=50)
     role = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
@@ -22,14 +22,14 @@ class Caregiver(models.Model):
         return self.name
 
 
-
 class Patient(models.Model):
     """
     to get goals, use patient.goal_set
     """
+    user = models.OneToOneField(User)
     name = models.CharField(max_length=100)
     caregiver = models.ManyToManyField(Caregiver)
-    #photo = models.ImageField()
+    photo = models.ImageField(upload_to='gk/static/gk/img')
     age = models.IntegerField()
     info = models.TextField()
     def __unicode__(self):

@@ -8,13 +8,14 @@ from django.utils import simplejson
 import datetime
 import time
 from django.core import serializers
-
+from django.contrib.auth.decorators import login_required
 
 
 
 # Create your views here.
 
 
+@login_required
 def home(request):
 	if (request.method == 'POST'):
 		form = AddGoalForm(request.POST)
@@ -42,10 +43,10 @@ def home(request):
 	else:
 		form = AddGoalForm()
 
+
+
 	latest_goals = Goal.objects.order_by('name')
 	actions = Action.objects.all()
-	
-
 
 	goals_context = []
 	charts = []
@@ -110,16 +111,23 @@ def home(request):
 	# 			'goalChart' : goalChart_context,
 	# 			'goalChart_div':goalChartDiv
 	# 			}
+
+	patients = Patient.objects.all()
+	patient = patients[0]
+	pic = patient.photo.name.split("/")[-1]
+
 	context = {'goals_context' : goals_context,
 				'charts' : charts,
 				'divs' : div_string,
 				'actions' : actions,
 				'AddGoalForm' : AddGoalForm,
+				'patient': patient,
+				'pic': pic,
 				}
 	return render(request, 'gk/Home.html', context)
 
 
-
+@login_required
 def goal(request, goal_name):
 	if (request.method == 'POST'):
 		if ('statQuant' in request.POST):
@@ -247,8 +255,8 @@ def goal(request, goal_name):
 	return render(request, 'gk/Goal.html', context)
 
 
+@login_required
 def action(request):
-	
 	if (request.method == 'POST'):
 		if ('actionForm' in request.POST):
 			form = AddActionForm_ActionPage(request.POST)
@@ -292,7 +300,7 @@ def action(request):
 	return render(request, 'gk/Actions.html', context)
 
 
-
+@login_required
 def contacts(request):
 	if (request.method == 'POST'):
 		form = AddContactForm(request.POST)
@@ -316,7 +324,7 @@ def contacts(request):
 	return render(request, 'gk/Contacts.html', context)
 
 
-
+@login_required
 def profile(request):
 	patient = Patient.objects.all()[:1]
 	updates = StatusUpdate.objects.order_by('-pub_time')[:5]
@@ -326,6 +334,20 @@ def profile(request):
 	return render(request, 'gk/Profile.html', context)
 
 
+def sample_cg(request):
+    ### SAMPLE LOGIN
+    user = request.user
+    if user_type(user) == 1:
+        #### display all of the display logic here
+        return None
+    else:
+        ### we have a doctor
+        return None
+
+def user_type(user):
+    if user.caregiver:
+        return 1
+    return 0
 
 ############### Form Classes ###############
 
