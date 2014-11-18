@@ -1,0 +1,65 @@
+<h1>Home Page</h1>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.get_username }}. Thanks for logging in.</p>
+    <p>You are a {{user_type}} with the following information:</p>
+    {%if caregiver%}
+        <table>
+            <tbody>
+                <tr>
+                    <td>Name:</td>
+                    <td>{{caregiver.name}}</td>
+                </tr>
+                <tr>
+                    <td>Role:</td>
+                    <td>{{caregiver.role}}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{caregiver.email}}</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>{{caregiver.phone}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    {%endif%}
+    {%if patient%}
+        <table>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><img src="{{patient.photo}}"></td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td>{{patient.name}}</td>
+                </tr>
+                <tr>
+                    <td>Caregiver:</td>
+                    <td>
+                        <b>{{caregiver.name}}</b>, {{caregiver.role}}
+                        <br/>
+                        <a href="mailto:{{caregiver.email}}">{{caregiver.email}}</a>
+                        <br/>
+                        {{caregiver.phone}}
+                    </td>
+                </tr>  
+                <tr>
+                    <td>age:</td>
+                    <td>{{patient.age}}</td>
+                </tr>   
+                <tr>
+                    <td>info:</td>
+                    <td>{{patient.info}}</td>
+                </tr>           
+            </tbody>
+        </table>
+    {%endif%}
+{% endif %}
+
+<p>
+    <a href="/logout/">Log out</a>
+</p>
