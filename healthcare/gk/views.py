@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from gk.models import *
@@ -9,14 +9,62 @@ import datetime
 import time
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from healthcare.views import get_patient_caregiver
 
+#this is a helper function to check if we have a current user,
+#identify if that user is a caregiver or patient, 
+#and redirect to the login page if they are not logged in
+def check_user(request):
+	viewer,viewer_type = get_patient_caregiver(request.user)
+
+	#if we're not logged in properly
+	if not request.user.is_authenticated() or viewer_type == None or viewer == None:
+		#throw an error message
+		return redirect('/')
+
+	return (viewer, viewer_type)
+
+#this is a helper function to check if a given viewer
+#has permission to view a given patient. This is based on a 
+#caregiver having permission on a patient, or the viewer being
+#the patient themselves
+def user_has_permission(request, viewer, viewer_type, patient):	
+	#checks if we're a caregiver who doesn't have access to this page
+	if viewer_type=="caregiver" and not patient.caregiver.filter(id=viewer.id).exists():
+		return render(request, "gk/Error.html", {'message': "Sorry, you don't have permission to view that patient.", 'viewer_name': viewer.name,})
+	elif viewer_type=="patient" and viewer != patient:
+		return render(request, "gk/Error.html", {'message': "Sorry, you don't have permission to view other patients.", 'viewer_name': viewer.name,})
+
+	return True
+
+@login_required
+def landing_page(request):
+	viewer,viewer_type = check_user(request)
+
+	#if we're a patient
+	if viewer_type == "patient":
+		return redirect('/goalkeeper/'+str(viewer.id))
+	#otherwise, if we're a caregiver
+	elif viewer_type == "caregiver":
+		patients = Patient.objects.filter(caregiver=viewer)
+		context ={
+			'patients': patients,
+			'viewer_name': viewer.name
+		}
+		return render(request, 'gk/Landing.html', context)
 
 
 # Create your views here.
-
-
 @login_required
-def home(request):
+def home(request, user_id):
+	viewer,viewer_type = check_user(request)		
+	patient = get_object_or_404(Patient,id=user_id)
+	valid = user_has_permission(request, viewer, viewer_type, patient)
+
+	#if invalid, render the error page
+	if valid != True:
+		return valid
+
 	if (request.method == 'POST'):
 		form = AddGoalForm(request.POST)
 		if form.is_valid():
@@ -24,8 +72,7 @@ def home(request):
 			data_type = form.cleaned_data['Type']
 			notes = form.cleaned_data['Description']
 			active = True
-			patientName = Patient.objects.all()[0].name
-			patient = get_object_or_404(Patient, name=patientName)
+			patientName = patient.name
 			caregiver = []
 			caregiverNames = form.cleaned_data['caregivers']
 			for caregiverName in caregiverNames:
@@ -45,8 +92,8 @@ def home(request):
 
 
 
-	latest_goals = Goal.objects.order_by('name')
-	actions = Action.objects.all()
+	latest_goals = Goal.objects.filter(patient=patient).order_by('name')
+	actions = Action.objects.filter(goal__patient=patient).all()
 
 	goals_context = []
 	charts = []
@@ -97,9 +144,11 @@ def home(request):
 		divs.append("goal_chart"+str(goal.id))
 		goals_context.append(this_goal)
 
-	
+		
 	if len(latest_goals)>0:
 		div_string=divs[0]
+	else:
+		div_string = ""
 	for i in range(1,len(latest_goals)):
 		div_string=div_string+','+'goal_chart'+str(latest_goals[i].id)
 	# div_string = str(divs).strip('[]')
@@ -111,9 +160,7 @@ def home(request):
 	# 			'goalChart' : goalChart_context,
 	# 			'goalChart_div':goalChartDiv
 	# 			}
-
-	patients = Patient.objects.all()
-	patient = patients[0]
+	
 	pic = patient.photo.name.split("/")[-1]
 
 	context = {'goals_context' : goals_context,
@@ -123,21 +170,35 @@ def home(request):
 				'AddGoalForm' : AddGoalForm,
 				'patient': patient,
 				'pic': pic,
+				'viewer_name': viewer.name,
 				}
 	return render(request, 'gk/Home.html', context)
 
 
 @login_required
 def goal(request, goal_name):
+	viewer,viewer_type = check_user(request)
+	goal = get_object_or_404( Goal, name=goal_name)
+	patient = goal.patient
+	valid = user_has_permission(request, viewer, viewer_type, patient)
+
+	#if invalid, render the error page
+	if valid != True:
+		return valid
+
 	if (request.method == 'POST'):
+		#you must be a caregiver to be able to assign goals/updates
+		if viewer_type != "caregiver":
+			return render(request, "gk/Error.html", {'message': "Sorry, you must be a caregiver to create updates", 'name': viewer.name,})
+
 		if ('statQuant' in request.POST):
 			form = AddQuantStatusForm(request.POST)
 			if form.is_valid():
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
-				goal = get_object_or_404( Goal, name=goal_name)
+				#reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)				
+				reporting_caregiver = viewer
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
 														 pub_time=pub_time,
@@ -152,8 +213,8 @@ def goal(request, goal_name):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				pub_time = datetime.datetime.now()
-				reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
-				goal = get_object_or_404( Goal, name=goal_name)
+				#reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)				
+				reporting_caregiver = viewer
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
 														 data_value=data_value,
 														 pub_time=pub_time,
@@ -165,10 +226,10 @@ def goal(request, goal_name):
 		elif ('act' in request.POST):
 			form = AddActionForm_GoalPage(request.POST)
 			if form.is_valid():
-				goal = get_object_or_404( Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
+				#caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
+				caregiver = viewer
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
@@ -194,7 +255,6 @@ def goal(request, goal_name):
 
 
 
-	goal = get_object_or_404( Goal, name=goal_name)
 	actions = Action.objects.filter(goal = goal)
 	completed_actions = [a for a in actions if a.completed]
 	pending_actions = [a for a in actions if not a.completed]
@@ -251,13 +311,28 @@ def goal(request, goal_name):
 			   'AddQuantStatusForm' : AddQuantStatusForm,
 			   'AddQualStatusForm' : AddQualStatusForm,
 			   'goalChart' : goalChart,
+			   'viewer_name': viewer.name,
 			   }
 	return render(request, 'gk/Goal.html', context)
 
 
 @login_required
 def action(request):
+	viewer,viewer_type = check_user(request)
+	goal = get_object_or_404( Goal, name=goal_name)
+	patient = goal.patient
+	valid = user_has_permission(request, viewer, viewer_type, patient)
+
+	#if invalid, render the error page
+	if valid != True:
+		return valid
+
 	if (request.method == 'POST'):
+		#you must be a caregiver to be able to assign actions
+		if viewer_type != "caregiver":
+			return render(request, "gk/Error.html", {'message': "Sorry, you must be a caregiver to create actions", 'name': viewer.name,})
+
+
 		if ('actionForm' in request.POST):
 			form = AddActionForm_ActionPage(request.POST)
 			if form.is_valid():
@@ -265,7 +340,8 @@ def action(request):
 				goal = get_object_or_404(Goal, name=goal_name)
 				name = form.cleaned_data['action']
 				deadline = form.cleaned_data['due_Date']
-				caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
+				#caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
+				caregiver = viewer
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
@@ -289,13 +365,14 @@ def action(request):
 	else:
 		form = AddActionForm_ActionPage()
 
-	actions = Action.objects.order_by('-deadline')
+	actions = Action.objects.filter(goal__patient=patient).order_by('-deadline')
 	completed_actions = [a for a in actions if a.completed]
 	pending_actions = [a for a in actions if not a.completed]
 	context = {'actions' : actions,
 			   'pending_actions' : pending_actions,
 			   'completed_actions' : completed_actions,
 			   'AddActionForm_ActionPage' : AddActionForm_ActionPage,
+			   'name': viewer.name,
 			   }
 	return render(request, 'gk/Actions.html', context)
 
@@ -319,15 +396,23 @@ def contacts(request):
 		form = AddContactForm()
 	caregivers = Caregiver.objects.all()
 	context = {'caregivers' : caregivers,
-			   'AddContactForm' : AddContactForm
+			   'AddContactForm' : AddContactForm,
 			   }
 	return render(request, 'gk/Contacts.html', context)
 
 
 @login_required
 def profile(request):
-	patient = Patient.objects.all()[:1]
-	updates = StatusUpdate.objects.order_by('-pub_time')[:5]
+	viewer,viewer_type = check_user(request)
+	goal = get_object_or_404( Goal, name=goal_name)
+	patient = goal.patient
+	valid = user_has_permission(request, viewer, viewer_type, patient)
+	
+	#if invalid, render the error page
+	if valid != True:
+		return valid
+
+	updates = StatusUpdate.objects.filter(goal__patient__id=patient.id).order_by('-pub_time')[:5]
 	context = {'patient' : patient,
 			   'updates' : updates,
 			   }
