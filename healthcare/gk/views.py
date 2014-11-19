@@ -10,7 +10,6 @@ import time
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
-from healthcare.viewd import get_patient_caregiver
 
 #this is a helper function to check if we have a current user,
 #identify if that user is a caregiver or patient, 
