@@ -312,15 +312,17 @@ def goal(request, goal_name):
 			   'AddQualStatusForm' : AddQualStatusForm,
 			   'goalChart' : goalChart,
 			   'viewer_name': viewer.name,
+			   'patient': patient,
 			   }
 	return render(request, 'gk/Goal.html', context)
 
 
 @login_required
-def action(request):
+def action(request, patient_id):
 	viewer,viewer_type = check_user(request)
-	goal = get_object_or_404( Goal, name=goal_name)
-	patient = goal.patient
+	#goal = get_object_or_404( Goal, name=goal_name)
+	#goal = Goal.objects.get(id=3)
+	patient = get_object_or_404( Patient, id=patient_id)	
 	valid = user_has_permission(request, viewer, viewer_type, patient)
 
 	#if invalid, render the error page
@@ -373,6 +375,7 @@ def action(request):
 			   'completed_actions' : completed_actions,
 			   'AddActionForm_ActionPage' : AddActionForm_ActionPage,
 			   'name': viewer.name,
+			   'patient': patient,
 			   }
 	return render(request, 'gk/Actions.html', context)
 
@@ -402,10 +405,9 @@ def contacts(request):
 
 
 @login_required
-def profile(request):
+def profile(request, patient_id):
 	viewer,viewer_type = check_user(request)
-	goal = get_object_or_404( Goal, name=goal_name)
-	patient = goal.patient
+	patient = get_object_or_404( Patient, id=patient_id)	
 	valid = user_has_permission(request, viewer, viewer_type, patient)
 	
 	#if invalid, render the error page

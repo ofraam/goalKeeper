@@ -26,9 +26,9 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav">
-            <li><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="/goalkeeper/action">Actions</a></li>
-            <li class="active"><a href="/goalkeeper/profile">Profile</a></li>
+            <li><a href="/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action/{{patient.id}}">Actions</a></li>
+            <li class="active"><a href="/goalkeeper/profile/{{patient.id}}">Profile</a></li>
             <li><a href="/goalkeeper/contacts">Contacts</a></li>
           </ul>
           <ul class="nav navbar-right">
@@ -42,13 +42,12 @@
         <div class="span8 well">
           <div class="span6">      <!-- Main page -->
             <div class="offset1">
-              {% for patient in patient %}
+              
               <div id="User_info">
                 <h2 id="User_name">{{patient.name}}</h2>
                 <p id="User_age"><strong>Age: </strong>10</p>
                 <!-- <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p> -->
-              </div>
-              {% endfor %}
+              </div>              
             </div>
             <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive" style="max-width:85%">
             <br>
@@ -60,11 +59,11 @@
 
             <div id="Gen_updates">
               <h3>Patient summary:</h3>
-               {% for patient in patient %}
+               
                <div id="patient_info" class="bg-info">
                 <p>{{patient.info}}</p>
                </div>
-               {% endfor %}
+               
 <!--               <h3>Recent Updates:</h3>
               {% if updates %}
               {% for update in updates %}
