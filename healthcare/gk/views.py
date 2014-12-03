@@ -381,7 +381,9 @@ def action(request, patient_id):
 
 
 @login_required
-def contacts(request):
+def contacts(request, patient_id):
+	patient = get_object_or_404( Patient, id=patient_id)	
+
 	if (request.method == 'POST'):
 		form = AddContactForm(request.POST)
 		if form.is_valid():
@@ -400,6 +402,7 @@ def contacts(request):
 	caregivers = Caregiver.objects.all()
 	context = {'caregivers' : caregivers,
 			   'AddContactForm' : AddContactForm,
+			   'patient': patient,
 			   }
 	return render(request, 'gk/Contacts.html', context)
 
