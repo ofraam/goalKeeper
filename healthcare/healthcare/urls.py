@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     #check our own login and logout handlers too
     url(r'^login/', 'healthcare.views.login_handler'),
-    url(r'^logout/', 'healthcare.views.logout_handler'),        
+    url(r'^logout/', 'healthcare.views.logout_handler'), 
+    url(r'^logs/', 'healthcare.views.logs'), 
+
 
 )

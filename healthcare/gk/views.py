@@ -10,6 +10,16 @@ import time
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
+import logging
+logger = logging.getLogger(__name__)
+
+#utililty used to write out to the log file
+#logs have the tab-delimited format of:
+#Timestamp	UserType	UserID	PatientID	Action	ActionID
+#the Django logging protocol adds in and formats time already,
+#so we provide a tab-delimited string of the remaining parameters
+def write_to_log(user_type, user_id, patient_id, action, action_id):
+	logger.info("\t".join(map(str,[user_type, user_id, patient_id, action, action_id])))
 
 #this is a helper function to check if we have a current user,
 #identify if that user is a caregiver or patient, 
@@ -38,8 +48,10 @@ def user_has_permission(request, viewer, viewer_type, patient):
 	return True
 
 @login_required
-def landing_page(request):
-	viewer,viewer_type = check_user(request)
+def landing_page(request):	
+	viewer,viewer_type = check_user(request)	
+
+	write_to_log(viewer_type, viewer.id, '', 'landing_page', '')
 
 	#if we're a patient
 	if viewer_type == "patient":
@@ -56,8 +68,9 @@ def landing_page(request):
 
 # Create your views here.
 @login_required
-def home(request, user_id):
-	viewer,viewer_type = check_user(request)		
+def home(request, user_id):	
+	viewer,viewer_type = check_user(request)			
+
 	patient = get_object_or_404(Patient,id=user_id)
 	valid = user_has_permission(request, viewer, viewer_type, patient)
 
@@ -86,11 +99,12 @@ def home(request, user_id):
 
 			for c in caregiver:
 				newGoal.caregivers.add(c)
+
+			write_to_log(viewer_type, viewer.id, user_id, 'create_new_goal', newGoal.id)
+
 			return HttpResponseRedirect('')
 	else:
 		form = AddGoalForm()
-
-
 
 	latest_goals = Goal.objects.filter(patient=patient).order_by('name')
 	actions = Action.objects.filter(goal__patient=patient).all()
@@ -172,6 +186,9 @@ def home(request, user_id):
 				'pic': pic,
 				'viewer_name': viewer.name,
 				}
+
+	write_to_log(viewer_type, viewer.id, user_id, 'patient', '')
+
 	return render(request, 'gk/Home.html', context)
 
 
@@ -205,6 +222,9 @@ def goal(request, goal_name):
 														 reporting_caregiver=reporting_caregiver,
 														 status=status,
 														 )
+
+				write_to_log(viewer_type, viewer.id, patient.id, 'new_quantitative_status', NEW_STATUS.id)
+
 				return HttpResponseRedirect('')
 
 		elif ('statQual' in request.POST):
@@ -221,6 +241,8 @@ def goal(request, goal_name):
 														 reporting_caregiver=reporting_caregiver,
 														 status=status,
 														 )
+				write_to_log(viewer_type, viewer.id, patient.id, 'new_qualitative_status', NEW_STATUS.id)				
+
 				return HttpResponseRedirect('')
 		
 		elif ('act' in request.POST):
@@ -237,15 +259,23 @@ def goal(request, goal_name):
 												   caregiver=caregiver,
 												   completed=completed,
 												   )
+				write_to_log(viewer_type, viewer.id, patient.id, 'new_action', NEW_ACTION.id)				
+
 				return HttpResponseRedirect('')
 		elif ('Complete' in request.POST):
 			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
 			action.completed = True
 			action.save()
+
+			write_to_log(viewer_type, viewer.id, patient.id, 'completed_action', action.id)
+
 			return HttpResponseRedirect('')
 		elif ('remove' in request.POST):
 			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
 			action.delete()
+			
+			write_to_log(viewer_type, viewer.id, patient.id, 'removed_action', action.id)
+
 			return HttpResponseRedirect('')
 
 	else:
@@ -314,6 +344,8 @@ def goal(request, goal_name):
 			   'viewer_name': viewer.name,
 			   'patient': patient,
 			   }
+
+	write_to_log(viewer_type, viewer.id, patient.id, 'goal', goal_name)
 	return render(request, 'gk/Goal.html', context)
 
 
@@ -352,16 +384,24 @@ def action(request, patient_id):
 												   completed=completed,
 												   )
 				
+				write_to_log(viewer_type, viewer.id, patient.id, 'new_action', NEW_ACTION.id)				
+
 				return HttpResponseRedirect('')
 
 		elif ('Complete' in request.POST):
 			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
 			action.completed = True
 			action.save()
+
+			write_to_log(viewer_type, viewer.id, patient.id, 'completed_action', action.id)
+
 			return HttpResponseRedirect('')
 		elif ('remove' in request.POST):
 			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
 			action.delete()
+
+			write_to_log(viewer_type, viewer.id, patient.id, 'removed_action', action.id)
+
 			return HttpResponseRedirect('')
 
 	else:
@@ -377,6 +417,9 @@ def action(request, patient_id):
 			   'name': viewer.name,
 			   'patient': patient,
 			   }
+
+	write_to_log(viewer_type, viewer.id, patient.id, 'actions', '')
+				   
 	return render(request, 'gk/Actions.html', context)
 
 
@@ -396,6 +439,7 @@ def contacts(request, patient_id):
 												   email = email, 
 												   phone = phone,
 												   )
+
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()

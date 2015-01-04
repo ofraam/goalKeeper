@@ -1,10 +1,23 @@
 # Create your views here.
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from gk.models import Caregiver, Patient
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+import logging
+logger = logging.getLogger(__name__)
 
+@login_required
+def logs(request):
+    number_logs = request.GET.get('latest')    
+
+    with open(settings.BASE_DIR+"/logfile", 'rb') as f:
+        lines = f.readlines()
+        if number_logs is not None:
+            lines = lines[-number_logs:]
+        return HttpResponse("<br/>".join(lines))    
 
 def show_login(request):
     if request.user.is_authenticated():
