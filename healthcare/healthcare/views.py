@@ -11,13 +11,16 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def logs(request):
-    number_logs = request.GET.get('latest')    
+    if request.user.is_authenticated() and request.user.is_staff:
+        number_logs = request.GET.get('latest')    
 
-    with open(settings.BASE_DIR+"/logfile", 'rb') as f:
-        lines = f.readlines()
-        if number_logs is not None:
-            lines = lines[-number_logs:]
-        return HttpResponse("<br/>".join(lines))    
+        with open(settings.BASE_DIR+"/logfile", 'rb') as f:
+            lines = f.readlines()
+            if number_logs is not None:
+                lines = lines[-number_logs:]
+            return HttpResponse("<br/>".join(lines))    
+    else:
+        return render(request, 'healthcare/login.html', {"message": "Sorry, you don't have permission to view that page."})
 
 def show_login(request):
     if request.user.is_authenticated():

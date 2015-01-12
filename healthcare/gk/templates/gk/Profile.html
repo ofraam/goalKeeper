@@ -38,47 +38,93 @@
     <div class="container-fluid">     
       <div class="row-fluid">
         <div class="span8 well">
-          <div class="span6">      <!-- Main page -->
-            <div class="offset1">
-              
-              <div id="User_info">
-                <h2 id="User_name">{{patient.name}}</h2>
-                <p id="User_age"><strong>Age: </strong>10</p>
-                <!-- <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p> -->
-              </div>              
-            </div>
-            <!-- <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive" style="max-width:85%"> -->
-            <br>
-            
-            
-          </div>
-          <div class="span6">
-            
+            <div role="tabpanel">              
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#view" aria-controls="view" role="tab" data-toggle="tab">View</a></li>
+                <li role="presentation"><a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">Edit</a></li>                
+              </ul>
 
-            <div id="Gen_updates">
-              <h3>Patient summary:</h3>
-               
-               <div id="patient_info" class="bg-info">
-                <p>{{patient.info}}</p>
-               </div>
-               
-<!--               <h3>Recent Updates:</h3>
-              {% if updates %}
-              {% for update in updates %}
+              <!-- Tab panes -->
+              <div class="tab-content">                
+                <div role="tabpanel" class="tab-pane active" id="view">
+                    <div class="span6">      <!-- Main page -->
+                      <div class="offset1">
+                        
+                        <div id="User_info">
+                          <h2 id="User_name">{{patient.name}}</h2>
+                          <p id="User_age"><strong>Age: </strong>{{patient.age}}</p>
+                          <!-- <p id="User_condition"><strong>Condition(s): </strong>Fake syndrome, Unrealitis</p> -->
+                        </div>              
+                      </div>
+                      <!-- <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive" style="max-width:85%"> -->
+                      <br>
+                      
+                      
+                    </div>
+                    <div class="span6">
+                      
 
-              <div id="Gen_update" class="bg-info">
-                <p >{{update.status}}<br><small>Posted on {{update.pub_time}} for {{update.goal}}</small></p>
+                      <div id="Gen_updates">
+                        <h3>Patient summary:</h3>
+                         
+                         <div id="patient_info" class="bg-info">
+                          <p>{{patient.info}}</p>
+                         </div>
+                         
+          <!--               <h3>Recent Updates:</h3>
+                        {% if updates %}
+                        {% for update in updates %}
+
+                        <div id="Gen_update" class="bg-info">
+                          <p >{{update.status}}<br><small>Posted on {{update.pub_time}} for {{update.goal}}</small></p>
+                        </div>
+                        
+                        <br>
+                        
+                        {% endfor %}
+                        {% else %}
+                          <p> You have no updates. <p>
+                        {% endif %} -->
+
+                      </div>
+                    </div>
+                </div>  
+                <div role="tabpanel" class="tab-pane" id="edit">
+                  <form class="form-horizontal" role="form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="patientName" class="col-sm-2 control-label">
+                        <b>Patient Name</b></label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="patientName" placeholder="Patient Name" value={{patient.name}} name="patientName">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="patientAge" class="col-sm-2 control-label">
+                        <b>Patient Age</b>
+                      </label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="patientAge" placeholder="Patient Age" value={{patient.age}} name="patientAge">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="patientInfo" class="col-sm-2 control-label">
+                        <b>Patient summary</b>
+                      </label>
+                      <div class="col-sm-10">
+                        <textarea class="form-control" id="patientInfo" placeholder="Patient summary" name="patientSummary">{{patient.info}}</textarea>
+                      </div>
+                    </div>                    
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Update</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>              
               </div>
-              
-              <br>
-              
-              {% endfor %}
-              {% else %}
-                <p> You have no updates. <p>
-              {% endif %} -->
 
-            </div>
-          </div>
+            </div>            
         </div>
         <div class="span4 well">   <!-- Right Side Bar -->
           <!-- <button type="button" class="btn btn-info"><i class="icon icon-pencil"></i>&nbsp;Edit Profile</button> -->
@@ -102,6 +148,6 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
   </body>
 </html>

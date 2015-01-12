@@ -461,6 +461,12 @@ def profile(request, patient_id):
 	if valid != True:
 		return valid
 
+	if (request.method == 'POST'):
+		patient.info = request.POST["patientSummary"]
+		patient.name = request.POST["patientName"]
+		patient.age = request.POST["patientAge"]
+		patient.save()
+
 	updates = StatusUpdate.objects.filter(goal__patient__id=patient.id).order_by('-pub_time')[:5]
 	context = {'patient' : patient,
 			   'updates' : updates,
@@ -496,7 +502,7 @@ class AddGoalForm(forms.Form):
 		super(AddGoalForm, self).__init__(*args, **kwargs)
 		self.fields['caregivers'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
 				choices=caregiverChoices() )
-	type_choices = [('0', u'Better/Same/Worse'), 
+	type_choices = [#('0', u'Better/Same/Worse'), 
 					('1', u'Number Value'),
 					]
 	
