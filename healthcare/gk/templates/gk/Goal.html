@@ -43,14 +43,11 @@
           <a class="brand" href="#"></a>
 
           <ul class="nav">
-            <li class="active"><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="/goalkeeper/action">Actions</a></li>
-            <li><a href="/goalkeeper/profile">Profile</a></li>
-            <li><a href="/goalkeeper/contacts">Contacts</a></li>
-          </ul>
-          <ul class="nav navbar-right">
-            <li><p class="navbar-text navbar-right" style="color:#ffffff">Demo User &nbsp;&nbsp;&nbsp;</p></li>
-          </ul>
+            <li class="active"><a href="/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action/{{patient.id}}">Actions</a></li>
+            <li><a href="/goalkeeper/profile/{{patient.id}}">Profile</a></li>
+            <li><a href="/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
+          </ul>          
         </div>
       </div>
     </div>
@@ -185,18 +182,21 @@
           </div>
         </div>
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
-          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">   <!-- Profile picture -->
+          <!-- Do not display this at the moment
+          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive profile-pic">
           <br>
+          
           <div id="recs" class="well">
             <h3>Recommendations:</h3>
             <ul>
-<!--               <li><a href="#">Recommendation 1</a></li>
+              <li><a href="#">Recommendation 1</a></li>
               <li><a href="#">Recommendation 2</a></li>
-              <li><a href="#">Recommendation 3</a></li> -->
-                <li><p>Schedule appointment with GI</p></li>
+              <li><a href="#">Recommendation 3</a></li>
+              <li><p>Schedule appointment with GI</p></li>
               <li><p>Update Bart's weight</p></li>
             </ul>
           </div>
+          -->
           <div class="well" id="contacts">
             <h3>Care Givers for this Goal</h3>
             <ul>

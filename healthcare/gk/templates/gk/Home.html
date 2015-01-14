@@ -1,5 +1,6 @@
 {% load staticfiles %}
 
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,13 +38,14 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav navbar-left">
-            <li class="active"><a href="/goalkeeper/">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="/goalkeeper/action">Actions</a></li>
-            <li><a href="/goalkeeper/profile">Profile</a></li>
-            <li><a href="/goalkeeper/contacts">Contacts</a></li>
+            <li class="active"><a href="/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/action/{{patient.id}}">Actions</a></li>
+            <li><a href="/goalkeeper/profile/{{patient.id}}">Profile</a></li>
+            <li><a href="/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
           </ul>
-          <ul class="nav navbar-right">
-            <li><p class="navbar-text navbar-right" style="color:#ffffff">Demo User &nbsp;&nbsp;&nbsp;</p></li>
+          <ul class="nav pull-right">
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
+            <li><a href="/logout/">Log out</a></li>
           </ul>
         </div>
       </div>
@@ -113,18 +115,21 @@
         </div>  <!-- Main page Collapse -->
 
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
-          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive">   <!-- Profile picture -->
+          <!-- Do not display this at the moment
+          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive profile-pic">
           <br>
+          
           <div id="recs" class="well">
             <h3>Recommendations:</h3>
             <ul>
-<!--               <li><a href="#" class="recs">Recommendation 1</a></li>
-              <li><a href="#" class="recs">Recommendation 2</a></li>
-              <li><a href="#" class="recs">Recommendation 3</a></li> -->
+              <li><a href="#">Recommendation 1</a></li>
+              <li><a href="#">Recommendation 2</a></li>
+              <li><a href="#">Recommendation 3</a></li>
               <li><p>Schedule appointment with GI</p></li>
-              <li><p>Update Bart's weight</p></li>              
+              <li><p>Update Bart's weight</p></li>
             </ul>
           </div>
+          -->
           <br>
           <div class="well" id="add_goal_form">       <!-- Add Goal Form -->
             <h3> Add a Goal</h3>

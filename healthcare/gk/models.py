@@ -13,7 +13,7 @@ class Caregiver(models.Model):
     to get the patients, use caregiver.patient_set
     to get the actions, use caregiver.action_set
     """
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, null=True, blank=True)
     name = models.CharField(max_length=50)
     role = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
@@ -29,7 +29,7 @@ class Patient(models.Model):
     user = models.OneToOneField(User)
     name = models.CharField(max_length=100)
     caregiver = models.ManyToManyField(Caregiver)
-    photo = models.ImageField(upload_to='gk/static/gk/img')
+    photo = models.ImageField(upload_to='gk/static/gk/img', null=True, blank=True)
     age = models.IntegerField()
     info = models.TextField()
     def __unicode__(self):
@@ -55,7 +55,7 @@ class StatusUpdate(models.Model):
     goal = models.ForeignKey(Goal)
     pub_time = models.DateTimeField()
     data_value = models.IntegerField()
-    reporting_caregiver = models.ForeignKey(Caregiver)
+    reporting_caregiver = models.ForeignKey(Caregiver, null=True, blank=True)
     status = models.TextField()
     def __unicode__(self):
         return self.status
