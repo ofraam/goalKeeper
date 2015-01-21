@@ -87,7 +87,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates'), 'healthcare/templates/']
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, '/healthcare/templates'), '/var/www/html/goalkeeper/healthcare/healthcare/templates/']
 
 # Additional locations of static files
 STATICFILES_DIRS = (

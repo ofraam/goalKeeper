@@ -43,10 +43,10 @@
           <a class="brand" href="#"></a>
 
           <ul class="nav">
-            <li class="active"><a href="/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="/goalkeeper/action/{{patient.id}}">Actions</a></li>
-            <li><a href="/goalkeeper/profile/{{patient.id}}">Profile</a></li>
-            <li><a href="/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
+            <li class="active"><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
+            <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>
+            <li><a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
           </ul>          
         </div>
       </div>
@@ -202,7 +202,7 @@
             <ul>
               {% if caregivers %}
               {% for caregiver in caregivers %}
-              <li><a href="/goalkeeper/contacts">{{caregiver.name}}</a></li>
+              <li><a href="/goalkeeper/goalkeeper/contacts">{{caregiver.name}}</a></li>
               {% endfor %}
               {% endif %}
             </ul>

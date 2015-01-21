@@ -38,10 +38,10 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav navbar-left">
-            <li class="active"><a href="/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="/goalkeeper/action/{{patient.id}}">Actions</a></li>
-            <li><a href="/goalkeeper/profile/{{patient.id}}">Profile</a></li>
-            <li><a href="/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
+            <li class="active"><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
+            <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>
+            <li><a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
           </ul>
           <ul class="nav pull-right">
             <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
@@ -58,7 +58,7 @@
             {% for goal_context in goals_context %}
               <div id="{{goal_context.goal.name}}" class="well">
 
-                <h2><a href="/goalkeeper/goal/{{goal_context.goal}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
+                <h2><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
 
                 <div class="span4">
                  <div class="row-fluid">
@@ -75,7 +75,7 @@
                       <h4>{{goal_context.goal.notes}}</h4>
                       
                       <br>
-                      <span class="text-center"><a href="/goalkeeper/goal/{{goal_context.goal.name}}" class="btn btn-info">View this goal!</a></span>
+                      <span class="text-center"><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.name}}" class="btn btn-info">View this goal!</a></span>
 
 
 
@@ -96,7 +96,7 @@
                   </div>
                     {% if goal_context.goal.caregivers %}
                       {% for c in goal_context.goal.caregivers.all %}
-                        <a href="/goalkeeper/contacts">{{c}}</a>&nbsp;
+                        <a href="/goalkeeper/goalkeeper/contacts">{{c}}</a>&nbsp;
                       {% endfor %}
                     {% endif %}
                   

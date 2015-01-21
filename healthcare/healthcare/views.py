@@ -20,11 +20,11 @@ def logs(request):
                 lines = lines[-number_logs:]
             return HttpResponse("<br/>".join(lines))    
     else:
-        return render(request, 'healthcare/login.html', {"message": "Sorry, you don't have permission to view that page."})
+        return render(request, 'goalkeeper/healthcare/login.html', {"message": "Sorry, you don't have permission to view that page."})
 
 def show_login(request):
     if request.user.is_authenticated():
-        return redirect('/home/')
+        return redirect('/goalkeeper/home/')
     else:
         return render(request, 'healthcare/login.html')    
 
@@ -39,7 +39,7 @@ def home(request):
         patient = None
         caregiver = patient_caregiver
     #return render(request, 'healthcare/home.html', {"user_type": type, "patient": patient, "caregiver": caregiver})
-    return redirect('/goalkeeper/')
+    return redirect('/goalkeeper/goalkeeper/')
 
 
 def try_get_caregiver(user):
