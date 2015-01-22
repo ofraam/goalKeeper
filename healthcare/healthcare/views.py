@@ -24,9 +24,9 @@ def logs(request):
 
 def show_login(request):
     if request.user.is_authenticated():
-        return redirect('/goalkeeper/home/')
+        return redirect('/goalkeeper/goalkeeper/')
     else:
-        return render(request, 'healthcare/login.html')    
+        return render(request, 'login.html')    
 
 @login_required
 def home(request):
@@ -77,12 +77,12 @@ def login_handler(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return redirect('/home/')
+            return redirect('/goalkeeper/goalkeeper/')
         else:
-            return render(request, 'healthcare/login.html', {"message": "Sorry, there was a problem logging you in."})
+            return render(request, 'login.html', {"message": "Sorry, there was a problem logging you in."})
     else:
-        return render(request, 'healthcare/login.html', {"message": "Sorry, there was a problem with your username or password."})
+        return render(request, 'login.html', {"message": "Sorry, there was a problem with your username or password."})
 
 def logout_handler(request):
     logout(request)
-    return render(request, 'healthcare/login.html')
+    return render(request, 'login.html')
