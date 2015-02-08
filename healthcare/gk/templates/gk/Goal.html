@@ -43,6 +43,9 @@
           <a class="brand" href="#"></a>
 
           <ul class="nav">
+            {%if viewer_type == "caregiver" %}
+              <li><a href="/goalkeeper/goalkeeper/">Return Home</a></li>
+            {%endif%} 
             <li class="active"><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
             <li><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
             <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>
@@ -202,7 +205,7 @@
             <ul>
               {% if caregivers %}
               {% for caregiver in caregivers %}
-              <li><a href="/goalkeeper/goalkeeper/contacts">{{caregiver.name}}</a></li>
+              <li><a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">{{caregiver.name}}</a></li>
               {% endfor %}
               {% endif %}
             </ul>

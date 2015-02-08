@@ -4,7 +4,7 @@ from gk import views
 
 urlpatterns = [
 	url(r'^$', views.landing_page, name='home'),	
-    url(r'^goal/(?P<goal_name>[\w ]+)/$', views.goal, name='goal'),
+    url(r'^goal/(?P<goal_id>[\w ]+)/$', views.goal, name='goal'),
     url(r'^action/(?P<patient_id>[\w ]+)/$', views.action, name='action'),
     url(r'^contacts/(?P<patient_id>[\w ]+)/$', views.contacts, name='contacts'),
     url(r'^profile/(?P<patient_id>[\w ]+)/$', views.profile, name='profile'),

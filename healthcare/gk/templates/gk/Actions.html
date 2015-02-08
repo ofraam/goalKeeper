@@ -37,6 +37,9 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav">
+            {%if viewer_type == "caregiver" %}
+              <li><a href="/goalkeeper/goalkeeper/">Return Home</a></li>
+            {%endif%} 
             <li><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
             <li class="active"><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
             <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>

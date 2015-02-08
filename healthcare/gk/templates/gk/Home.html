@@ -38,6 +38,9 @@
       <div class="navbar-inner">
           <a class="brand" href="#"></a>
           <ul class="nav navbar-left">
+            {%if viewer_type == "caregiver" %}
+              <li><a href="/goalkeeper/goalkeeper/">Return Home</a></li>
+            {%endif%}                          
             <li class="active"><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
             <li><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
             <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>
@@ -56,9 +59,9 @@
 
           {% if goals_context %}
             {% for goal_context in goals_context %}
-              <div id="{{goal_context.goal.name}}" class="well">
+              <div id="{{goal_context.goal.id}}" class="well">
 
-                <h2><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
+                <h2><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.id}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
 
                 <div class="span4">
                  <div class="row-fluid">
@@ -75,7 +78,7 @@
                       <h4>{{goal_context.goal.notes}}</h4>
                       
                       <br>
-                      <span class="text-center"><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.name}}" class="btn btn-info">View this goal!</a></span>
+                      <span class="text-center"><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.id}}" class="btn btn-info">View this goal!</a></span>
 
 
 
@@ -96,7 +99,7 @@
                   </div>
                     {% if goal_context.goal.caregivers %}
                       {% for c in goal_context.goal.caregivers.all %}
-                        <a href="/goalkeeper/goalkeeper/contacts">{{c}}</a>&nbsp;
+                        <a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">{{c}}</a>&nbsp;
                       {% endfor %}
                     {% endif %}
                   

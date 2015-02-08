@@ -185,6 +185,7 @@ def home(request, user_id):
 				'patient': patient,
 				'pic': pic,
 				'viewer_name': viewer.name,
+				'viewer_type': viewer_type
 				}
 
 	write_to_log(viewer_type, viewer.id, user_id, 'patient', '')
@@ -193,9 +194,9 @@ def home(request, user_id):
 
 
 @login_required
-def goal(request, goal_name):
+def goal(request, goal_id):
 	viewer,viewer_type = check_user(request)
-	goal = get_object_or_404( Goal, name=goal_name)
+	goal = get_object_or_404( Goal, id=goal_id)
 	patient = goal.patient
 	valid = user_has_permission(request, viewer, viewer_type, patient)
 
@@ -345,7 +346,7 @@ def goal(request, goal_name):
 			   'patient': patient,
 			   }
 
-	write_to_log(viewer_type, viewer.id, patient.id, 'goal', goal_name)
+	write_to_log(viewer_type, viewer.id, patient.id, 'goal', goal_id)
 	return render(request, 'gk/Goal.html', context)
 
 
