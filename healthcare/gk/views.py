@@ -96,7 +96,6 @@ def home(request, user_id):
 										  patient = patient,
 										  data_type = data_type,
 										  )
-
 			for c in caregiver:
 				newGoal.caregivers.add(c)
 
@@ -444,7 +443,7 @@ def contacts(request, patient_id):
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()
-	caregivers = Caregiver.objects.all()
+	caregivers = patient.caregiver.all()
 	context = {'caregivers' : caregivers,
 			   'AddContactForm' : AddContactForm,
 			   'patient': patient,
@@ -558,8 +557,6 @@ class AddQualStatusForm(forms.Form):
 
 class complete_button(forms.Form):
 	pass
-
-
 
 
 
