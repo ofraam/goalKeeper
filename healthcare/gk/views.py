@@ -113,7 +113,7 @@ def home(request, user_id):
 	charts = []
 	divs = []
 	for g in latest_goals:
-		goal = get_object_or_404( Goal, name=g.name)
+		goal = get_object_or_404( Goal, id=g.id)
 		this_goal = {}
 		this_goal['chart']=[]
 		this_goal['div']=[]
