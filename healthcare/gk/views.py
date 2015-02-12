@@ -96,7 +96,6 @@ def home(request, user_id):
 										  patient = patient,
 										  data_type = data_type,
 										  )
-
 			for c in caregiver:
 				newGoal.caregivers.add(c)
 
@@ -113,7 +112,7 @@ def home(request, user_id):
 	charts = []
 	divs = []
 	for g in latest_goals:
-		goal = get_object_or_404( Goal, name=g.name)
+		goal = get_object_or_404( Goal, id=g.id)
 		this_goal = {}
 		this_goal['chart']=[]
 		this_goal['div']=[]
@@ -444,7 +443,7 @@ def contacts(request, patient_id):
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()
-	caregivers = Caregiver.objects.all()
+	caregivers = patient.caregiver.all()
 	context = {'caregivers' : caregivers,
 			   'AddContactForm' : AddContactForm,
 			   'patient': patient,
@@ -577,8 +576,6 @@ class AddQualStatusForm(forms.Form):
 
 class complete_button(forms.Form):
 	pass
-
-
 
 
 
