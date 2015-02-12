@@ -79,7 +79,7 @@ def home(request, user_id):
 		return valid
 
 	if (request.method == 'POST'):
-		form = AddGoalForm(request.POST)
+		form = AddGoalForm(request.POST, patient=patient)
 		if form.is_valid():
 			name = form.cleaned_data['goal_Name']
 			data_type = form.cleaned_data['Type']
@@ -104,7 +104,7 @@ def home(request, user_id):
 
 			return HttpResponseRedirect('')
 	else:
-		form = AddGoalForm()
+		form = AddGoalForm(patient=patient)
 
 	latest_goals = Goal.objects.filter(patient=patient).order_by('name')
 	actions = Action.objects.filter(goal__patient=patient).all()
@@ -181,7 +181,7 @@ def home(request, user_id):
 				'charts' : charts,
 				'divs' : div_string,
 				'actions' : actions,
-				'AddGoalForm' : AddGoalForm,
+				'AddGoalForm' : form,
 				'patient': patient,
 				'pic': pic,
 				'viewer_name': viewer.name,
@@ -369,7 +369,7 @@ def action(request, patient_id):
 
 
 		if ('actionForm' in request.POST):
-			form = AddActionForm_ActionPage(request.POST)
+			form = AddActionForm_ActionPage(request.POST, patient=patient)
 			if form.is_valid():
 				goal_name = form.cleaned_data['goal']
 				goal = get_object_or_404(Goal, name=goal_name)
@@ -406,7 +406,7 @@ def action(request, patient_id):
 			return HttpResponseRedirect('')
 
 	else:
-		form = AddActionForm_ActionPage()
+		form = AddActionForm_ActionPage(patient=patient)
 
 	actions = Action.objects.filter(goal__patient=patient).order_by('-deadline')
 	completed_actions = [a for a in actions if a.completed]
@@ -414,7 +414,7 @@ def action(request, patient_id):
 	context = {'actions' : actions,
 			   'pending_actions' : pending_actions,
 			   'completed_actions' : completed_actions,
-			   'AddActionForm_ActionPage' : AddActionForm_ActionPage,
+			   'AddActionForm_ActionPage' : form,
 			   'name': viewer.name,
 			   'patient': patient,
 			   }
@@ -492,17 +492,28 @@ def user_type(user):
 
 ############### Form Classes ###############
 
-def caregiverChoices():
-	caregiver_choices = []
-	for c in Caregiver.objects.all():
-		caregiver_choices.append((c.name, c))
-	return caregiver_choices
+def caregiverChoices(patient=None):
+	if patient is None:
+		caregiver_choices = []
+		for c in Caregiver.objects.all():
+			caregiver_choices.append((c.name, c))
+		return caregiver_choices
+	else:
+		caregiver_choices = []
+		for c in patient.caregiver.all():
+			caregiver_choices.append((c.name, c))
+		return caregiver_choices
+
 
 class AddGoalForm(forms.Form):
 	def __init__(self, *args, **kwargs):
+		patient = kwargs.pop('patient')
+
 		super(AddGoalForm, self).__init__(*args, **kwargs)
+		
 		self.fields['caregivers'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
-				choices=caregiverChoices() )
+				choices=caregiverChoices(patient) )
+
 	type_choices = [#('0', u'Better/Same/Worse'), 
 					('1', u'Number Value'),
 					]
@@ -519,16 +530,24 @@ class AddContactForm(forms.Form):
 	Phone = forms.CharField()
 
 
-def goalChoices():
-	goal_choices = []
-	for g in Goal.objects.all():
-		goal_choices.append((g.name, g))
-	return goal_choices
+def goalChoices(patient=None):
+	if patient is None:
+		goal_choices = []
+		for g in Goal.objects.all():
+			goal_choices.append((g.name, g))
+		return goal_choices
+	else:
+		goal_choices = []
+		for g in Goal.objects.filter(patient=patient):
+			goal_choices.append((g.name, g))
+		return goal_choices
 
 class AddActionForm_ActionPage(forms.Form):
 	def __init__(self, *args, **kwargs):
+		patient = kwargs.pop('patient')
+
 		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
-		self.fields['goal'] = forms.ChoiceField(choices=goalChoices())
+		self.fields['goal'] = forms.ChoiceField(choices=goalChoices(patient=patient))
 		self.fields['action'] = forms.CharField(max_length=32)
 		self.fields['due_Date'] = forms.DateField(widget=forms.DateInput(attrs=
                                 {
