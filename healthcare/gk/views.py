@@ -440,6 +440,8 @@ def contacts(request, patient_id):
 												   phone = phone,
 												   )
 
+			newCaregiver = get_object_or_404(Caregiver, name = name)
+			patient.caregiver.add(newCaregiver)
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()
