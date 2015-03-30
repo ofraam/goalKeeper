@@ -442,9 +442,14 @@ def contacts(request, patient_id):
 												   phone = phone,
 												   )
 
+<<<<<<< HEAD
 			write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', NEW_CONTACT.name)
 			patient.caregiver.add(NEW_CONTACT)
 			patient.save()
+=======
+			newCaregiver = get_object_or_404(Caregiver, name = name)
+			patient.caregiver.add(newCaregiver)
+>>>>>>> af7716340e1db01a7272eb07a1a96c3362306127
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()
