@@ -425,6 +425,7 @@ def action(request, patient_id):
 
 @login_required
 def contacts(request, patient_id):
+	write_to_log('contacts','a','b','c','c')
 	viewer,viewer_type = check_user(request)
 	#goal = get_object_or_404( Goal, name=goal_name)
 	#goal = Goal.objects.get(id=3)
