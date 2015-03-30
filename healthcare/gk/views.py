@@ -428,8 +428,10 @@ def contacts(request, patient_id):
 	patient = get_object_or_404( Patient, id=patient_id)	
 
 	if (request.method == 'POST'):
+		write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', 'in if1')
 		form = AddContactForm(request.POST)
 		if form.is_valid():
+			write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', 'in if2')
 			name = form.cleaned_data['contact_Name']
 			role = form.cleaned_data['Role']
 			email = form.cleaned_data['Email']
@@ -440,6 +442,9 @@ def contacts(request, patient_id):
 												   phone = phone,
 												   )
 
+			write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', NEW_CONTACT.name)
+			patient.caregiver.add(NEW_CONTACT)
+			patient.save()
 			return HttpResponseRedirect('')
 	else:
 		form = AddContactForm()
