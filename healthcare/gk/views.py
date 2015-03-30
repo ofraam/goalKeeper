@@ -425,10 +425,19 @@ def action(request, patient_id):
 
 @login_required
 def contacts(request, patient_id):
+	viewer,viewer_type = check_user(request)
+	#goal = get_object_or_404( Goal, name=goal_name)
+	#goal = Goal.objects.get(id=3)
 	patient = get_object_or_404( Patient, id=patient_id)	
+	valid = user_has_permission(request, viewer, viewer_type, patient)
 
+	#if invalid, render the error page
+	if valid != True:
+		return valid
+	
+	write_to_log(viewer_type, viewer.id, patient.id, 'contactsPage', 'view')
 	if (request.method == 'POST'):
-		write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', 'in if1')
+		write_to_log(viewer_type,viewer.id,patient.id, 'contacts', 'in if1')
 		form = AddContactForm(request.POST)
 		if form.is_valid():
 			write_to_log(patient.id, patient.id,patient.id, 'contactsOfra', 'in if2')
@@ -442,7 +451,7 @@ def contacts(request, patient_id):
 												   phone = phone,
 												   )
 
-			write_to_log(patient.id, patient.id,patient.id, 'contacts', NEW_CONTACT.name)
+			write_to_log(viewer_type,viewer.id,patient.id, 'contacts', NEW_CONTACT.name)
 			patient.caregiver.add(NEW_CONTACT)
 			patient.save()
 			return HttpResponseRedirect('')
