@@ -57,7 +57,9 @@
       <div class="row-fluid">
         <div class="span9">      <!-- Main page -->
 
+
           {% if goals_context %}
+            <h1>Active Goals</h1>
             {% for goal_context in goals_context %}
               <div id="{{goal_context.goal.id}}" class="well">
 
@@ -112,6 +114,62 @@
               {% endfor %}
             {% else %}
               <h2>No goals are available at this time. Add a goal using the "Add Goal" form below to add a new goal</h2>
+          {% endif %}
+          {% if inactive_goals_context %}
+            <h1>Inactive Goals</h1>
+            {% for goal_context in inactive_goals_context %}
+              <div id="{{goal_context.goal.id}}" class="well">
+
+                <h2><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.id}}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
+
+                <div class="span4">
+                 <div class="row-fluid">
+                  
+                <div style="height:200px" id="goal_chart{{goal_context.goal.id}}">{{divs}}</div>   </div>
+     <!-- Goal graph -->
+                  <!--<img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      -->
+                 <!--  <h4>A graph will go here</h4> -->
+                </div>
+
+                <div class="span7">         <!-- Goal info, add action/status update, goal contacts -->
+                  <div class="row-fluid">
+                    <div class="span7">
+                      <h4>{{goal_context.goal.notes}}</h4>
+                      
+                      <br>
+                      <span class="text-center"><a href="/goalkeeper/goalkeeper/goal/{{goal_context.goal.id}}" class="btn btn-info">View this goal!</a></span>
+
+
+
+                      <br><br>
+                    </div>
+                    <div class="span5">
+                      <h4>Pending Actions:</h4>
+                      <div class="HAscroll">
+                        {% for action in actions%}
+                          {% if action.goal == goal_context.goal %}
+                            {% if not action.completed %}
+                              <p>{{action.name}} <small> on {{action.deadline}}</small></p>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                    {% if goal_context.goal.caregivers %}
+                      {% for c in goal_context.goal.caregivers.all %}
+                        <a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">{{c}}</a>&nbsp;
+                      {% endfor %}
+                    {% endif %}
+                  
+
+                </div>
+
+                <div class="clearfix"></div> 
+
+              </div>  <!-- Goal 1 Collapse -->
+              {% endfor %}
+            {% else %}              
           {% endif %}
          {% load chartit %}
         {{charts|load_charts:divs}}

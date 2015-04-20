@@ -38,6 +38,12 @@
         </div>
       </div>
     </div>
+    {%if errors or non_field_errors%}
+    <div class="alert alert-error pageError">      
+        {{errors}}       
+        {{non_field_errors}} 
+    </div>
+    {%endif%}
     <div class="container-fluid">     
       <div class="row-fluid">
         <div class="span8">      <!-- Main page -->
