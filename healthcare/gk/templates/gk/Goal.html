@@ -3,6 +3,7 @@
 <html lang="en">
   <head>
     <link href="{% static 'gk/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+    <link href="{% static 'gk/css/jquery.datetimepicker.css' %}"  rel="stylesheet" type="text/css">
     <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,10 +18,15 @@
     <script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script src="{% static 'gk/js/jquery.datetimepicker.js' %}"></script>
+
 
     <script>
-      $(function() {
-        $( ".datepicker" ).datepicker();
+      $(document).ready(function() {
+
+          $( ".datetimepicker" ).datetimepicker({
+            "format": "m/d Y H:i"
+          });
         });
     </script>
     
@@ -181,6 +187,15 @@
                                       <textarea class="form-control" id="{{status_update.status_data.id}}_notes" placeholder="Notes" name="notes">{{status_update.status_data.status}}</textarea>
                                     </div>
                                   </div>  
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Time</b>
+                                    </label>
+                                    <div class="col-sm-10">
+                                      
+                                      <input type="text" class="form-control datetimepicker" id="{{status_update.status_data.id}}_time" value='{{status_update.status_data.pub_time|date:"m/d Y H:i"}}' name="pub_time">
+                                    </div>
+                                  </div> 
                                   <button type="submit" class="btn">Update</button>
                                 </form>                        
                               </div>              

@@ -310,13 +310,15 @@ def goal(request, goal_id):
 		elif('updateStatus' in request.POST):
 			status = get_object_or_404(StatusUpdate, id=request.POST.get('statusID', False))
 			
-			form = AddQuantStatusForm(request.POST)
+			form = UpdateQuantStatusForm(request.POST)
 			if form.is_valid():
 				status_text = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
+				status_time = form.cleaned_data['pub_time']
 
 				status.status = status_text
 				status.data_value = data_value
+				status.pub_time = status_time
 
 				status.save()
 			else:
@@ -389,7 +391,7 @@ def goal(request, goal_id):
                'xAxis': {
                     'title': {
                        'text': 'Date'}
-                       }
+                       },
                 },
 			x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%m/%d/%y"), False)
 		)
@@ -425,6 +427,9 @@ def action(request, patient_id):
 	#goal = Goal.objects.get(id=3)
 	patient = get_object_or_404( Patient, id=patient_id)	
 	valid = user_has_permission(request, viewer, viewer_type, patient)
+
+	errors = None
+	non_field_errors = None
 
 	#if invalid, render the error page
 	if valid != True:
@@ -675,6 +680,11 @@ class AddActionForm_GoalPage(forms.Form):
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
 	notes = forms.CharField()
+
+class UpdateQuantStatusForm(forms.Form):
+	data_Value = forms.IntegerField()
+	notes = forms.CharField()
+	pub_time = forms.DateTimeField(input_formats=["%m/%d %Y %H:%M"])
 
 class AddQualStatusForm(forms.Form):
 	choices = [('2', u'Better'),
