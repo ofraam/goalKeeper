@@ -472,7 +472,7 @@ def action(request, patient_id):
 
 			write_to_log(viewer_type, viewer.id, patient.id, 'completed_action', action.id)
 
-			#return HttpResponseRedirect('')
+			return HttpResponseRedirect('')
 		elif ('remove' in request.POST):
 			action = get_object_or_404(Action, id=request.POST.get('actionName', False))
 			action.delete()
