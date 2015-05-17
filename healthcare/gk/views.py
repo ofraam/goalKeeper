@@ -10,10 +10,12 @@ import time
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
+from django.utils import timezone
+import pytz
 import logging
 logger = logging.getLogger(__name__)
-
-#utililty used to write out to the log file
+timezone.activate(pytz.timezone('US/Pacific-New'))
+#ctivate(pytz.timezone(tzname))utililty used to write out to the log file
 #logs have the tab-delimited format of:
 #Timestamp	UserType	UserID	PatientID	Action	ActionID
 #the Django logging protocol adds in and formats time already,
@@ -230,7 +232,8 @@ def goal(request, goal_id):
 			if form.is_valid():
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
-				pub_time = datetime.datetime.now()
+				#pub_time = datetime.datetime.now()
+				pub_time = timezone.now()
 				#reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)				
 				reporting_caregiver = viewer
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
