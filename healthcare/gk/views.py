@@ -324,6 +324,8 @@ def goal(request, goal_id):
 				status.pub_time = status_time
 
 				status.save()
+				write_to_log(viewer_type, viewer.id, patient.id, 'edit_status_update', status.id)
+
 			else:
 				errors = form.errors
 				non_field_errors = form.non_field_errors
@@ -340,6 +342,8 @@ def goal(request, goal_id):
 				goal.active = new_active
 
 				goal.save()
+				write_to_log(viewer_type, viewer.id, patient.id, 'edit__goal', goal.id)
+
 			else:
 
 				errors = goal_form.errors
@@ -553,7 +557,8 @@ def contacts(request, patient_id):
 			   'errors': errors,
 			   'non_field_errors': non_field_errors
 			   }
-	write_to_log('1','2','3','4','5')
+	write_to_log(viewer_type, viewer.id, patient.id, 'view_contacts', 'contacts')
+
 	return render(request, 'gk/Contacts.html', context)
 
 
@@ -577,6 +582,7 @@ def profile(request, patient_id):
 	context = {'patient' : patient,
 			   'updates' : updates,
 			   }
+	write_to_log(viewer_type, viewer.id, patient.id, 'view_profile', 'profile')
 	return render(request, 'gk/Profile.html', context)
 
 
