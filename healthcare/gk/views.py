@@ -14,7 +14,8 @@ from django.utils import timezone
 import pytz
 import logging
 logger = logging.getLogger(__name__)
-timezone.activate(pytz.timezone('US/Pacific-New'))
+#timezone.deactivate()
+timezone.activate(pytz.timezone('US/Eastern'))
 #ctivate(pytz.timezone(tzname))utililty used to write out to the log file
 #logs have the tab-delimited format of:
 #Timestamp	UserType	UserID	PatientID	Action	ActionID
@@ -74,7 +75,7 @@ def edit_status(request, goal_id):
 # Create your views here.
 @login_required
 def home(request, user_id):	
-	viewer,viewer_type = check_user(request)			
+	viewer,viewer_type = check_user(request)	
 
 	patient = get_object_or_404(Patient,id=user_id)
 	valid = user_has_permission(request, viewer, viewer_type, patient)
@@ -211,6 +212,10 @@ def home(request, user_id):
 @login_required
 def goal(request, goal_id):
 	viewer,viewer_type = check_user(request)
+	if (viewer.id == 15):
+		timezone.activate(pytz.timezone('US/Eastern'))
+	else:
+		timezone.activate(pytz.timezone('US/Pacific-New'))
 	goal = get_object_or_404( Goal, id=goal_id)
 	patient = goal.patient
 	valid = user_has_permission(request, viewer, viewer_type, patient)
@@ -511,7 +516,6 @@ def action(request, patient_id):
 
 @login_required
 def contacts(request, patient_id):
-	write_to_log('contacts','a','b','c','c')
 	viewer,viewer_type = check_user(request)
 	#goal = get_object_or_404( Goal, name=goal_name)
 	#goal = Goal.objects.get(id=3)
@@ -682,9 +686,10 @@ class AddActionForm_ActionPage(forms.Form):
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField(max_length=32)
 	due_Date = forms.DateField(widget=forms.TextInput(attrs=
-                                {
-                                    'class':'datepicker'
-                                }))
+                               {
+                                  'class':'datepicker'
+                             }))
+	
 
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
