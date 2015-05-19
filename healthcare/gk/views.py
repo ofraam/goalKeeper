@@ -212,7 +212,7 @@ def home(request, user_id):
 @login_required
 def goal(request, goal_id):
 	viewer,viewer_type = check_user(request)
-	if (viewer.id == 15):
+	if ((viewer.id == 9) | (viewer.id == 8)):
 		timezone.activate(pytz.timezone('US/Eastern'))
 	else:
 		timezone.activate(pytz.timezone('US/Pacific-New'))
