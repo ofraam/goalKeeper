@@ -1,3 +1,4 @@
 *.pyc
 logfile
 db.sqlite3
+healthcare/db.sqlite3
