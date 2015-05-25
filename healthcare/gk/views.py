@@ -238,7 +238,8 @@ def goal(request, goal_id):
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
 				#pub_time = datetime.datetime.now()
-				pub_time = timezone.now()
+				#pub_time = timezone.now()
+				pub_time = form.cleaned_data['pub_time']
 				#reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)				
 				reporting_caregiver = viewer
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
@@ -694,6 +695,7 @@ class AddActionForm_GoalPage(forms.Form):
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
 	notes = forms.CharField()
+	pub_time = forms.DateTimeField(input_formats=["%m/%d %Y %H:%M"])
 
 class UpdateQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
