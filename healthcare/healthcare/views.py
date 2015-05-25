@@ -6,6 +6,8 @@ from django.shortcuts import redirect
 from gk.models import Caregiver, Patient
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.utils import timezone
+import pytz
 import logging
 logger = logging.getLogger(__name__)
 
@@ -72,8 +74,13 @@ def get_patient_caregiver(user):
 def login_handler(request):
     username = request.POST['email']
     password = request.POST['password']    
+    #timezoneUser = request.POST['timezone']
+    
     user = authenticate(username=username, password=password)
-
+    #if timezoneUser=='PDT':
+	#timezone.activate(pytz.timezone('US/Pacific-New'))
+#    else:
+#	timezone.activate(pytz.timezone('US/Eastern'))
     if user is not None:
         if user.is_active:
             login(request, user)

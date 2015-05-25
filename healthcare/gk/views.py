@@ -10,10 +10,13 @@ import time
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
+from django.utils import timezone
+import pytz
 import logging
 logger = logging.getLogger(__name__)
-
-#utililty used to write out to the log file
+#timezone.deactivate()
+timezone.activate(pytz.timezone('US/Eastern'))
+#ctivate(pytz.timezone(tzname))utililty used to write out to the log file
 #logs have the tab-delimited format of:
 #Timestamp	UserType	UserID	PatientID	Action	ActionID
 #the Django logging protocol adds in and formats time already,
@@ -72,7 +75,7 @@ def edit_status(request, goal_id):
 # Create your views here.
 @login_required
 def home(request, user_id):	
-	viewer,viewer_type = check_user(request)			
+	viewer,viewer_type = check_user(request)	
 
 	patient = get_object_or_404(Patient,id=user_id)
 	valid = user_has_permission(request, viewer, viewer_type, patient)
@@ -209,6 +212,10 @@ def home(request, user_id):
 @login_required
 def goal(request, goal_id):
 	viewer,viewer_type = check_user(request)
+	if ((viewer.id == 9) | (viewer.id == 8)):
+		timezone.activate(pytz.timezone('US/Eastern'))
+	else:
+		timezone.activate(pytz.timezone('US/Pacific-New'))
 	goal = get_object_or_404( Goal, id=goal_id)
 	patient = goal.patient
 	valid = user_has_permission(request, viewer, viewer_type, patient)
@@ -230,7 +237,8 @@ def goal(request, goal_id):
 			if form.is_valid():
 				status = form.cleaned_data['notes']
 				data_value = form.cleaned_data['data_Value']
-				pub_time = datetime.datetime.now()
+				#pub_time = datetime.datetime.now()
+				pub_time = timezone.now()
 				#reporting_caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)				
 				reporting_caregiver = viewer
 				NEW_STATUS = StatusUpdate.objects.create(goal=goal,
@@ -321,6 +329,8 @@ def goal(request, goal_id):
 				status.pub_time = status_time
 
 				status.save()
+				write_to_log(viewer_type, viewer.id, patient.id, 'edit_status_update', status.id)
+
 			else:
 				errors = form.errors
 				non_field_errors = form.non_field_errors
@@ -337,6 +347,8 @@ def goal(request, goal_id):
 				goal.active = new_active
 
 				goal.save()
+				write_to_log(viewer_type, viewer.id, patient.id, 'edit__goal', goal.id)
+
 			else:
 
 				errors = goal_form.errors
@@ -504,7 +516,6 @@ def action(request, patient_id):
 
 @login_required
 def contacts(request, patient_id):
-	write_to_log('contacts','a','b','c','c')
 	viewer,viewer_type = check_user(request)
 	#goal = get_object_or_404( Goal, name=goal_name)
 	#goal = Goal.objects.get(id=3)
@@ -550,7 +561,8 @@ def contacts(request, patient_id):
 			   'errors': errors,
 			   'non_field_errors': non_field_errors
 			   }
-	write_to_log('1','2','3','4','5')
+	write_to_log(viewer_type, viewer.id, patient.id, 'view_contacts', 'contacts')
+
 	return render(request, 'gk/Contacts.html', context)
 
 
@@ -574,6 +586,7 @@ def profile(request, patient_id):
 	context = {'patient' : patient,
 			   'updates' : updates,
 			   }
+	write_to_log(viewer_type, viewer.id, patient.id, 'view_profile', 'profile')
 	return render(request, 'gk/Profile.html', context)
 
 
@@ -673,9 +686,10 @@ class AddActionForm_ActionPage(forms.Form):
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField(max_length=32)
 	due_Date = forms.DateField(widget=forms.TextInput(attrs=
-                                {
-                                    'class':'datepicker'
-                                }))
+                               {
+                                  'class':'datepicker'
+                             }))
+	
 
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.IntegerField()
