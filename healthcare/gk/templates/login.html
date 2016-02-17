@@ -36,7 +36,7 @@
           </ul>
           <ul class="nav pull-right">
             <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
-            <li><a href="/goalkeeper/logout/"><p>Log out</p></a></li>
+            <li><a href="{% url 'healthcare:logout' %}"><p>Log out</p></a></li>
           </ul>
         </div>
       </div>
@@ -56,7 +56,7 @@
                 <h1 style="text-align:center">Login</h1>
 
 
-                <form action="/goalkeeper/login/" method="POST" style="margin-left:auto; margin-right: auto;" >
+                <form action="/login/" method="POST" style="margin-left:auto; margin-right: auto;" >
                     {% csrf_token %}
                     <div class="form-group" style="text-align:center">
                         <input type="text" class="form-control input-lg" placeholder="Username" id = "email" name="email"/>
@@ -70,7 +70,7 @@
                     </div>    
                 </form>
 
-                <a href="/goalkeeper/admin/password_reset">Forgotten your password or username?</a>
+                <a href="{% url 'admin_password_reset' %}">Forgotten your password or username?</a>
             </div>
         </div>
 

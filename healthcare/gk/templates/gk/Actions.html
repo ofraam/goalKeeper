@@ -38,12 +38,12 @@
           <a class="brand" href="#"></a>
           <ul class="nav">
             {%if viewer_type == "caregiver" %}
-              <li><a href="/goalkeeper/goalkeeper/">Return Home</a></li>
+              <li><a href="{% url 'gk:home' %}">Return Home</a></li>
             {%endif%} 
-            <li><a href="/goalkeeper/goalkeeper/{{patient.id}}">Goals</a></li>     <!-- Top bar list of links -->
-            <li class="active"><a href="/goalkeeper/goalkeeper/action/{{patient.id}}">Actions</a></li>
-            <li><a href="/goalkeeper/goalkeeper/profile/{{patient.id}}">Profile</a></li>
-            <li><a href="/goalkeeper/goalkeeper/contacts/{{patient.id}}">Contacts</a></li>
+            <li><a href="{% url 'gk:home' patient.id %}">Goals</a></li>     <!-- Top bar list of links -->
+            <li class="active"><a href="{% url 'gk:action' patient.id %}">Actions</a></li>
+            <li><a href="{% url 'gk:profile' patient.id %}">Profile</a></li>
+            <li><a href="{% url 'gk:contacts' patient.id %}">Contacts</a></li>
           </ul>
         </div>
       </div>

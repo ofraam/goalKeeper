@@ -33,7 +33,7 @@ def check_user(request):
 	#if we're not logged in properly
 	if not request.user.is_authenticated() or viewer_type == None or viewer == None:
 		#throw an error message
-		return redirect('/goalkeeper')
+		return redirect('healthcare:home')
 
 	return (viewer, viewer_type)
 
@@ -52,13 +52,14 @@ def user_has_permission(request, viewer, viewer_type, patient):
 
 @login_required
 def landing_page(request):	
+	print check_user(request)
 	viewer,viewer_type = check_user(request)	
 
 	write_to_log(viewer_type, viewer.id, '', 'landing_page', '')
 
 	#if we're a patient
 	if viewer_type == "patient":
-		return redirect('/goalkeeper/goalkeeper/'+str(viewer.id))
+		return redirect('gk:home', user_id=str(viewer.id))
 	#otherwise, if we're a caregiver
 	elif viewer_type == "caregiver":
 		patients = Patient.objects.filter(caregiver=viewer)

@@ -57,7 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'healthcare.urls'
+ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'healthcare.wsgi.application'
 

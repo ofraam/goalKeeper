@@ -26,7 +26,7 @@ def logs(request):
 
 def show_login(request):
     if request.user.is_authenticated():
-        return redirect('/goalkeeper/goalkeeper/')
+        return redirect('gk:home')
     else:
         return render(request, 'login.html')    
 
@@ -41,7 +41,7 @@ def home(request):
         patient = None
         caregiver = patient_caregiver
     #return render(request, 'healthcare/home.html', {"user_type": type, "patient": patient, "caregiver": caregiver})
-    return redirect('/goalkeeper/goalkeeper/')
+    return redirect('gk:home')
 
 
 def try_get_caregiver(user):
@@ -84,7 +84,7 @@ def login_handler(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return redirect('/goalkeeper/goalkeeper/')
+            return redirect('gk:home')
         else:
             return render(request, 'login.html', {"message": "Sorry, there was a problem logging you in."})
     else:

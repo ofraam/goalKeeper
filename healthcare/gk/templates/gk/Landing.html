@@ -36,7 +36,7 @@
           </ul>
           <ul class="nav pull-right">
             <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
-            <li><a href="/goalkeeper/logout/"><p>Log out</p></a></li>
+            <li><a href="{% url 'healthcare:logout' %}"><p>Log out</p></a></li>
           </ul>
         </div>
       </div>
@@ -54,7 +54,7 @@
       {%for patient in patients%}
 
         <p>
-          <a href="/goalkeeper/goalkeeper/{{patient.id}}">{{patient.name}}</a>
+          <a href="{% url 'gk:home' %}">{{patient.name}}</a>
         </p>
 
       {%endfor%}
