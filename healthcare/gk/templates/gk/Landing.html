@@ -54,7 +54,7 @@
       {%for patient in patients%}
 
         <p>
-          <a href="{% url 'gk:home' %}">{{patient.name}}</a>
+          <a href="{% url 'gk:home' patient.id %}">{{patient.name}}</a>
         </p>
 
       {%endfor%}
