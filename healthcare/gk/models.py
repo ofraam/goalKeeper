@@ -40,7 +40,7 @@ class Goal(models.Model):
     """
     to get the status updates, use goal.status_update_set
     """
-    name = models.CharField(max_length=100)
+    name = models.TextField()
     caregivers = models.ManyToManyField(Caregiver)
     patient = models.ForeignKey(Patient)
     notes = models.TextField()
@@ -64,7 +64,7 @@ class StatusUpdate(models.Model):
 class Action(models.Model):
     goal = models.ForeignKey(Goal)
     completed = models.BooleanField()
-    name = models.CharField(max_length=100)
+    name = models.TextField()
     caregiver = models.ForeignKey(Caregiver)
     deadline = models.DateField()
     def __unicode__(self):

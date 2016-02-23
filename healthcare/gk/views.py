@@ -634,7 +634,7 @@ class AddGoalForm(forms.Form):
 					('1', u'Number Value'),
 					]
 	
-	goal_Name = forms.CharField(max_length = 100)
+	goal_Name = forms.CharField()
 	Type = forms.ChoiceField(type_choices)
 	Description = forms.CharField()
 	#caregivers = forms.MultipleChoiceField(caregiver_choices)
@@ -645,7 +645,7 @@ class UpdateGoalForm(forms.Form):
 		super(UpdateGoalForm, self).__init__(*args, **kwargs)
 		
 	
-	name = forms.CharField(max_length = 100)
+	name = forms.CharField()
 	notes = forms.CharField()
 	active = forms.BooleanField(required=False, initial=False)
 	#caregivers = forms.MultipleChoiceField(caregiver_choices)
@@ -676,7 +676,7 @@ class AddActionForm_ActionPage(forms.Form):
 
 		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
 		self.fields['goal'] = forms.ChoiceField(choices=goalChoices(patient=patient))
-		self.fields['action'] = forms.CharField(max_length=32)
+		self.fields['action'] = forms.CharField()
 		self.fields['due_Date'] = forms.DateField(widget=forms.DateInput(attrs=
                                 {
                                     'class':'datepicker'
@@ -685,7 +685,7 @@ class AddActionForm_ActionPage(forms.Form):
 	
 
 class AddActionForm_GoalPage(forms.Form):
-	action = forms.CharField(max_length=32)
+	action = forms.CharField()
 	due_Date = forms.DateField(widget=forms.TextInput(attrs=
                                {
                                   'class':'datepicker'
