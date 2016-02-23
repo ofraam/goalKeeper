@@ -65,6 +65,7 @@ class Action(models.Model):
     goal = models.ForeignKey(Goal)
     completed = models.BooleanField()
     name = models.TextField()
+    notes = models.TextField()
     caregiver = models.ForeignKey(Caregiver)
     deadline = models.DateField()
     def __unicode__(self):

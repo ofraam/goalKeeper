@@ -281,12 +281,14 @@ def goal(request, goal_id):
 			form = AddActionForm_GoalPage(request.POST)
 			if form.is_valid():
 				name = form.cleaned_data['action']
+				notes = form.cleaned_data['notes']
 				deadline = form.cleaned_data['due_Date']
 				#caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				caregiver = viewer
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
+												   notes = notes,
 												   deadline=deadline, 
 												   caregiver=caregiver,
 												   completed=completed,
@@ -460,12 +462,14 @@ def action(request, patient_id):
 				goal_name = form.cleaned_data['goal']
 				goal = get_object_or_404(Goal, name=goal_name)
 				name = form.cleaned_data['action']
+				notes = form.cleaned_data['notes']
 				deadline = form.cleaned_data['due_Date']
 				#caregiver = get_object_or_404(Caregiver, name = Caregiver.objects.all()[0].name)
 				caregiver = viewer
 				completed = False
 				NEW_ACTION = Action.objects.create(goal = goal, 
 												   name = name, 
+												   notes = notes,
 												   deadline=deadline, 
 												   caregiver=caregiver,
 												   completed=completed,
@@ -677,6 +681,7 @@ class AddActionForm_ActionPage(forms.Form):
 		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
 		self.fields['goal'] = forms.ChoiceField(choices=goalChoices(patient=patient))
 		self.fields['action'] = forms.CharField()
+		self.fields['notes'] = forms.CharField()
 		self.fields['due_Date'] = forms.DateField(widget=forms.DateInput(attrs=
                                 {
                                     'class':'datepicker'
@@ -686,7 +691,8 @@ class AddActionForm_ActionPage(forms.Form):
 
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField()
-	due_Date = forms.DateField(widget=forms.TextInput(attrs=
+	notes = forms.CharField()
+	due_Date = forms.DateField(widget=forms.DateInput(attrs=
                                {
                                   'class':'datepicker'
                              }))
