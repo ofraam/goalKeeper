@@ -71,11 +71,13 @@
         <div class="span9 well">      <!-- Main page -->
           <div class="row-fluid">
 
-            <div role="tabpanel" class="tabbable tabs-right">    
+            <div role="tabpanel" class="tabbable tabs-right">   
+              {% if viewer_role == "parent" or viewer_type == "patient" %} 
               <ul class="nav nav-tabs navbar-right" role="tablist">
                 <li role="presentation" class="active"><a href="#view_goal_info" aria-controls="view_goal_info" role="tab" data-toggle="tab">View</a></li>
                 <li role="presentation"><a href="#edit_goal_info" aria-controls="edit_goal_info" role="tab" data-toggle="tab">Edit</a></li>                
               </ul>
+              {% endif %}
 
               <!-- Tab panes -->
               <div class="tab-content">                
@@ -154,11 +156,13 @@
 
                       <div id="status udpdate" class="bg-info">
                         {% if goal.data_type == 1 %}
-                          <div role="tabpanel" class="tabbable tabs-right">              
+                          <div role="tabpanel" class="tabbable tabs-right"> 
+                          {% if viewer_role == "parent" or viewer_type == "patient" %}             
                             <ul class="nav nav-tabs navbar-right" role="tablist">
                               <li role="presentation" class="active"><a href="#{{status_update.status_data.id}}_view" aria-controls="{{status_update.status_data.id}}_view" role="tab" data-toggle="tab">View</a></li>
                               <li role="presentation"><a href="#{{status_update.status_data.id}}_edit" aria-controls="{{status_update.status_data.id}}_edit" role="tab" data-toggle="tab">Edit</a></li>                
                             </ul>
+                            {% endif %}
 
                             <!-- Tab panes -->
                             <div class="tab-content">                
@@ -240,8 +244,10 @@
                         <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
                         &nbsp;&nbsp;
                         <span class="bg-info">Notes: {{action.notes}}</span>
+                        {% if viewer_role == "parent" or viewer_type == "patient" %}
                         &nbsp;&nbsp;
                         <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                        {% endif %}
                       </form>
                     </p>
 
@@ -266,8 +272,10 @@
                       <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
                       &nbsp;&nbsp;
                       <span class="bg-info">Notes: {{action.notes}}</span>
+                      {% if viewer_role == "parent" or viewer_type == "patient" %}
                       &nbsp;&nbsp;
                       <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                      {% endif %}
                     </form>
                   </p>
                   {% endfor %}
@@ -278,6 +286,7 @@
             </div>            
           </div>
 
+          {% if viewer_role == "parent" or viewer_type == "patient" %}
           <div class="row-fluid" id="AddForms">
             <div class="span4" id="StatusUpdateForm">
               <h3>Add Status Update</h3>
@@ -313,6 +322,7 @@
                     </form>
             </div>
           </div>
+          {% endif %}
         </div>
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
           <!-- Do not display this at the moment

@@ -28,14 +28,14 @@ def write_to_log(user_type, user_id, patient_id, action, action_id):
 #identify if that user is a caregiver or patient, 
 #and redirect to the login page if they are not logged in
 def check_user(request):
-	viewer,viewer_type = get_patient_caregiver(request.user)
+	viewer,viewer_type, viewer_role = get_patient_caregiver(request.user)
 
 	#if we're not logged in properly
 	if not request.user.is_authenticated() or viewer_type == None or viewer == None:
 		#throw an error message
 		return redirect('healthcare:home')
 
-	return (viewer, viewer_type)
+	return (viewer, viewer_type, viewer_role)
 
 #this is a helper function to check if a given viewer
 #has permission to view a given patient. This is based on a 
@@ -53,7 +53,7 @@ def user_has_permission(request, viewer, viewer_type, patient):
 @login_required
 def landing_page(request):	
 	print check_user(request)
-	viewer,viewer_type = check_user(request)	
+	viewer,viewer_type, viewer_role = check_user(request)	
 
 	write_to_log(viewer_type, viewer.id, '', 'landing_page', '')
 
@@ -65,6 +65,7 @@ def landing_page(request):
 		patients = Patient.objects.filter(caregiver=viewer)
 		context ={
 			'patients': patients,
+			'viewer_role': viewer_role,
 			'viewer_name': viewer.name
 		}
 		return render(request, 'gk/Landing.html', context)
@@ -76,7 +77,7 @@ def edit_status(request, goal_id):
 # Create your views here.
 @login_required
 def home(request, user_id):	
-	viewer,viewer_type = check_user(request)	
+	viewer,viewer_type, viewer_role = check_user(request)	
 
 	patient = get_object_or_404(Patient,id=user_id)
 	valid = user_has_permission(request, viewer, viewer_type, patient)
@@ -201,6 +202,7 @@ def home(request, user_id):
 				'pic': pic,
 				'viewer_name': viewer.name,
 				'viewer_type': viewer_type,
+				'viewer_role': viewer_role,
 				'errors': errors,
 			   	'non_field_errors': non_field_errors
 				}
@@ -212,7 +214,7 @@ def home(request, user_id):
 
 @login_required
 def goal(request, goal_id):
-	viewer,viewer_type = check_user(request)
+	viewer,viewer_type, viewer_role = check_user(request)
 	if ((viewer.id == 9) | (viewer.id == 8)):
 		timezone.activate(pytz.timezone('US/Eastern'))
 	else:
@@ -426,6 +428,7 @@ def goal(request, goal_id):
 			   'AddQualStatusForm' : AddQualStatusForm,
 			   'goalChart' : goalChart,
 			   'viewer_name': viewer.name,
+			   'viewer_role': viewer_role,
 			   'patient': patient,
 			   'errors': errors,
 			   'non_field_errors': non_field_errors
@@ -437,7 +440,7 @@ def goal(request, goal_id):
 
 @login_required
 def action(request, patient_id):
-	viewer,viewer_type = check_user(request)
+	viewer,viewer_type, viewer_role = check_user(request)
 	#goal = get_object_or_404( Goal, name=goal_name)
 	#goal = Goal.objects.get(id=3)
 	patient = get_object_or_404( Patient, id=patient_id)	
@@ -509,6 +512,7 @@ def action(request, patient_id):
 			   'completed_actions' : completed_actions,
 			   'AddActionForm_ActionPage' : form,
 			   'name': viewer.name,
+			   'viewer_role': viewer_role,
 			   'patient': patient,
 			   'errors': errors,
 			   'non_field_errors': non_field_errors
@@ -521,7 +525,7 @@ def action(request, patient_id):
 
 @login_required
 def contacts(request, patient_id):
-	viewer,viewer_type = check_user(request)
+	viewer,viewer_type, viewer_role = check_user(request)
 	#goal = get_object_or_404( Goal, name=goal_name)
 	#goal = Goal.objects.get(id=3)
 	patient = get_object_or_404( Patient, id=patient_id)	
@@ -564,6 +568,7 @@ def contacts(request, patient_id):
 			   'AddContactForm' : AddContactForm,
 			   'patient': patient,
 			   'errors': errors,
+			   'viewer_role': viewer_role,
 			   'non_field_errors': non_field_errors
 			   }
 	write_to_log(viewer_type, viewer.id, patient.id, 'view_contacts', 'contacts')
@@ -573,7 +578,7 @@ def contacts(request, patient_id):
 
 @login_required
 def profile(request, patient_id):
-	viewer,viewer_type = check_user(request)
+	viewer,viewer_type, viewer_role = check_user(request)
 	patient = get_object_or_404( Patient, id=patient_id)	
 	valid = user_has_permission(request, viewer, viewer_type, patient)
 	
@@ -589,6 +594,7 @@ def profile(request, patient_id):
 
 	updates = StatusUpdate.objects.filter(goal__patient__id=patient.id).order_by('-pub_time')[:5]
 	context = {'patient' : patient,
+			   'viewer_role' : viewer_role,
 			   'updates' : updates,
 			   }
 	write_to_log(viewer_type, viewer.id, patient.id, 'view_profile', 'profile')

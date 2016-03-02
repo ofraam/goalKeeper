@@ -73,8 +73,10 @@
                   <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
                   &nbsp;&nbsp;
                   <span class="bg-info">Notes: {{action.notes}}</span>
+                  {% if viewer_role == "parent" or viewer_type == "patient" %}
                   &nbsp;&nbsp;
                   <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                  {% endif %}
                 </form>
               </p>
 
@@ -100,8 +102,10 @@
                 <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
                 &nbsp;&nbsp;
                 <span class="bg-info">Notes: {{action.notes}}</span>
+                {% if viewer_role == "parent" or viewer_type == "patient" %}
                 &nbsp;&nbsp;
                 <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                {% endif %}
               </form>
             </p>
 
@@ -111,7 +115,7 @@
           {% endif %}
 
         </div>
-
+        {% if viewer_role == "parent" or viewer_type == "patient" %}
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
 
           <!-- Do not display this at the moment
@@ -137,6 +141,7 @@
             </form>
           </div>
         </div>
+        {% endif %}
       </div>
 
     </div>

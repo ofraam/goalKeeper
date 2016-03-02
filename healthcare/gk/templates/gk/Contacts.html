@@ -63,6 +63,7 @@
           {% endif %}
 
         </div>
+        {% if viewer_role == "parent" or viewer_type == "patient" %}
         <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
           <!-- Do not display this at the moment
           <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive profile-pic">
@@ -112,6 +113,7 @@
               </form>
           </div>
         </div>
+        {% endif %}
       </div>
 
     </div>

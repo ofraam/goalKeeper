@@ -63,11 +63,11 @@ def try_get_patient(user):
 def get_patient_caregiver(user):
     patient = try_get_patient(user)
     if patient:
-        return patient, "patient"
+        return patient, "patient", ""
     
     caregiver = try_get_caregiver(user)
     if caregiver:
-        return caregiver, "caregiver"
+        return caregiver, "caregiver", caregiver.role
 
     return None, None
 
