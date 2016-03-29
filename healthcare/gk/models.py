@@ -54,7 +54,7 @@ class Goal(models.Model):
 class StatusUpdate(models.Model):
     goal = models.ForeignKey(Goal)
     pub_time = models.DateTimeField()
-    data_value = models.IntegerField()
+    data_value = models.FloatField()
     reporting_caregiver = models.ForeignKey(Caregiver, null=True, blank=True)
     status = models.TextField()
     def __unicode__(self):
