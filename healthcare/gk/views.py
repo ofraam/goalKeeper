@@ -687,7 +687,7 @@ class AddActionForm_ActionPage(forms.Form):
 		super(AddActionForm_ActionPage, self).__init__(*args, **kwargs)
 		self.fields['goal'] = forms.ChoiceField(choices=goalChoices(patient=patient))
 		self.fields['action'] = forms.CharField()
-		self.fields['notes'] = forms.CharField()
+		self.fields['notes'] = forms.CharField(required=False)
 		self.fields['due_Date'] = forms.DateField(widget=forms.DateInput(attrs=
                                 {
                                     'class':'datepicker'
@@ -697,7 +697,7 @@ class AddActionForm_ActionPage(forms.Form):
 
 class AddActionForm_GoalPage(forms.Form):
 	action = forms.CharField()
-	notes = forms.CharField()
+	notes = forms.CharField(required=False)
 	due_Date = forms.DateField(widget=forms.DateInput(attrs=
                                {
                                   'class':'datepicker'
