@@ -707,6 +707,7 @@ class AddActionForm_GoalPage(forms.Form):
 class AddQuantStatusForm(forms.Form):
 	data_Value = forms.FloatField()
 	notes = forms.CharField()
+	pub_time = forms.DateTimeField(input_formats=["%m/%d %Y %H:%M"])
 
 class UpdateQuantStatusForm(forms.Form):
 	data_Value = forms.FloatField()
