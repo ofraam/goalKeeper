@@ -119,7 +119,7 @@ def home(request, user_id):
 	else:
 		form = AddGoalForm(patient=patient)
 
-	latest_goals = Goal.objects.filter(patient=patient).order_by('name')
+	latest_goals = Goal.objects.filter(patient=patient,caregivers__id__exact=viewer.id).order_by('name')
 	actions = Action.objects.filter(goal__patient=patient).all()
 
 	goals_context = []
@@ -169,6 +169,7 @@ def home(request, user_id):
 		
 		charts.append(goalChart)
 		divs.append("goal_chart"+str(goal.id))
+		
 		goals_context.append(this_goal)
 
 	active_goals = [x for x in goals_context if x['goal'].active]
@@ -341,16 +342,27 @@ def goal(request, goal_id):
 				non_field_errors = form.non_field_errors
 
 		elif('updateGoal' in request.POST):									
-			goal_form = UpdateGoalForm(request.POST)
+			goal_form = UpdateGoalForm(request.POST,patient=patient)
 			if goal_form.is_valid():
 				new_name = goal_form.cleaned_data['name']
 				new_notes = goal_form.cleaned_data['notes']
 				new_active = goal_form.cleaned_data['active']
 
+				caregiver = []
+				caregiverIds = goal_form.cleaned_data['caregivers']
+				for caregiverId in caregiverIds:
+					caregiver.append(get_object_or_404(Caregiver, id = caregiverId))
+
+				for c in goal.caregivers.all():
+					if c.id not in caregiverIds:
+						goal.caregivers.remove(c)
+				for c in caregiver:
+					goal.caregivers.add(c)
+				
 				goal.name = new_name
 				goal.notes = new_notes
 				goal.active = new_active
-
+				
 				goal.save()
 				write_to_log(viewer_type, viewer.id, patient.id, 'edit__goal', goal.id)
 
@@ -360,9 +372,11 @@ def goal(request, goal_id):
 				non_field_errors = goal_form.non_field_errors
 
 	else:
-		form1 = AddActionForm_GoalPage()
+		form1 = UpdateGoalForm(patient=patient)
+		#form4 = AddActionForm_GoalPage()
 		form2 = AddQuantStatusForm()
 		form3 = AddQualStatusForm()
+		
 
 
 
@@ -376,6 +390,7 @@ def goal(request, goal_id):
 
 
 	caregivers = Caregiver.objects.filter(goal = goal)
+	all_caregivers = patient.caregiver.all()
 	qualDict = {0:'Worse',
 				1:'Same',
 				2:'Better'}
@@ -422,6 +437,7 @@ def goal(request, goal_id):
 			   'completed_actions' : completed_actions,
 			   'recent_status_updates' : status_updates_and_forms,
 			   'caregivers' : caregivers,
+			   'all_caregivers': all_caregivers,
 			   'qualDict' : qualDict,
 			   'AddActionForm_GoalPage' : AddActionForm_GoalPage,
 			   'AddQuantStatusForm' : AddQuantStatusForm,
@@ -504,7 +520,7 @@ def action(request, patient_id):
 	else:
 		form = AddActionForm_ActionPage(patient=patient)
 
-	actions = Action.objects.filter(goal__patient=patient).order_by('-deadline')
+	actions = Action.objects.filter(goal__patient=patient, goal__caregivers__id__exact=viewer.id).order_by('-deadline')
 	completed_actions = [a for a in actions if a.completed]
 	pending_actions = [a for a in actions if not a.completed]
 	context = {'actions' : actions,
@@ -592,7 +608,7 @@ def profile(request, patient_id):
 		patient.age = request.POST["patientAge"]
 		patient.save()
 
-	updates = StatusUpdate.objects.filter(goal__patient__id=patient.id).order_by('-pub_time')[:5]
+	updates = StatusUpdate.objects.filter(goal__patient__id=patient.id, goal__caregivers__id__exact=viewer.id).order_by('-pub_time')[:5]
 	context = {'patient' : patient,
 			   'viewer_role' : viewer_role,
 			   'updates' : updates,
@@ -630,6 +646,17 @@ def caregiverChoices(patient=None):
 			caregiver_choices.append((c.name, c))
 		return caregiver_choices
 
+def caregiverChoicesIDs(patient=None):
+	if patient is None:
+		caregiver_choices = []
+		for c in Caregiver.objects.all():
+			caregiver_choices.append((c.id, c))
+		return caregiver_choices
+	else:
+		caregiver_choices = []
+		for c in patient.caregiver.all():
+			caregiver_choices.append((c.id, c))
+		return caregiver_choices
 
 class AddGoalForm(forms.Form):
 	def __init__(self, *args, **kwargs):
@@ -649,11 +676,21 @@ class AddGoalForm(forms.Form):
 	Description = forms.CharField()
 	#caregivers = forms.MultipleChoiceField(caregiver_choices)
 
+class UpdateGoalForm1(forms.Form):
+	type_choices = [#('0', u'Better/Same/Worse'), 
+					('1', u'Number Value'),
+					]
+	
+	goal_Name = forms.CharField()
+	Type = forms.ChoiceField(type_choices)
+	Description = forms.CharField()
+	
 class UpdateGoalForm(forms.Form):
 	def __init__(self, *args, **kwargs):		
-
+		patient = kwargs.pop('patient')
 		super(UpdateGoalForm, self).__init__(*args, **kwargs)
-		
+		self.fields['caregivers'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
+				choices=caregiverChoicesIDs(patient) )
 	
 	name = forms.CharField()
 	notes = forms.CharField()
@@ -661,11 +698,7 @@ class UpdateGoalForm(forms.Form):
 	#caregivers = forms.MultipleChoiceField(caregiver_choices)
 
 
-class AddContactForm(forms.Form):
-	contact_Name = forms.CharField()
-	Role = forms.CharField()
-	Email = forms.EmailField()
-	Phone = forms.CharField()
+
 
 
 def goalChoices(patient=None):
@@ -679,6 +712,12 @@ def goalChoices(patient=None):
 		for g in Goal.objects.filter(patient=patient):
 			goal_choices.append((g.name, g))
 		return goal_choices
+		
+class AddContactForm(forms.Form):
+	contact_Name = forms.CharField()
+	Role = forms.CharField()
+	Email = forms.EmailField()
+	Phone = forms.CharField()		
 
 class AddActionForm_ActionPage(forms.Form):
 	def __init__(self, *args, **kwargs):

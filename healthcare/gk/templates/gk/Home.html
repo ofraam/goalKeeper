@@ -61,6 +61,7 @@
           {% if goals_context %}
             <h1>Active Goals</h1>
             {% for goal_context in goals_context %}
+			
               <div id="{{goal_context.goal.id}}" class="well">
 
                 <h2><a href="{% url 'gk:goal' goal_context.goal.id %}">{{goal_context.goal.name}}</a></h2>     <!-- Goal 1 -->
