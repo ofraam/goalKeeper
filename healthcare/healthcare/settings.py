@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gk',
     'chartit',
-    'south',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -118,10 +117,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
-        },
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
