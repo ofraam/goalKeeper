@@ -219,12 +219,14 @@ def home(request, user_id):
     write_to_log(viewer_type, viewer.id, user_id, 'patient', '')
 
     if mobileBrowser(request):
-        t = loader.get_template('gk/m_home.html')
+        #t = loader.get_template('gk/m_home.html')
+        return render(request, 'gk/m_home.html', context)
     else:
-        t = loader.get_template('gk/Home.html')
+        #t = loader.get_template('gk/Home.html')
+        return render(request, 'gk/Home.html', context)
 
-    return HttpResponse(t.render(context))
-    #return render(request, 'gk/Home.html', context)
+    #return HttpResponse(t.render(context))
+
 
 
 @login_required

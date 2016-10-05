@@ -143,8 +143,8 @@
         </div>
         <div class="panel-body">
             <form role="form" method="post">
-                {% csrf_token %}
                 {{ AddGoalForm |bootstrap }}
+                {% csrf_token %}
                 <input type="submit" value="Submit" class="btn btn-primary"/>
             </form>
         </div>
