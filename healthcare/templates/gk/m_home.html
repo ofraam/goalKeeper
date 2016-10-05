@@ -63,9 +63,42 @@
 
 
     {% if goals_context %}
-        <h1>Active Goals</h1>
-        <hr>
+        <h1>Active Goals
+            {% if viewer_role == "parent" or viewer_type == "patient" %}
+                <button type="button" class="pull-right btn btn-success btn-lg" data-toggle="modal"
+                        data-target="#myModal">New Goal
+                </button></h1>
 
+
+
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Add a New Goal</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" method="post">
+                                    {{ AddGoalForm |bootstrap }}
+                                    {% csrf_token %}
+                                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% else %}
+                </h1>
+            {% endif %}
+        <hr>
         {% for goal_context in goals_context %}
             <div id="{{ goal_context.goal.id }}" class="well">
                 <h2 class="text-center">{{ goal_context.goal.name }}</h2>
@@ -136,21 +169,7 @@
         <h2>No active goals are available at this time. Add a goal using the "Add Goal" form below to add a new
             goal</h2>
     {% endif %}
-{% if viewer_role == "parent" or viewer_type == "patient" %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3> Add a New Goal </h3>
-        </div>
-        <div class="panel-body">
-            <form role="form" method="post">
-                {{ AddGoalForm |bootstrap }}
-                {% csrf_token %}
-                <input type="submit" value="Submit" class="btn btn-primary"/>
-            </form>
-        </div>
-    </div>
-{% endif %}
-<hr>
+
 {% if inactive_goals_context %}
     <h1>Inactive Goals</h1>
     {% for goal_context in inactive_goals_context %}
@@ -164,9 +183,6 @@
 
                     <div style="height:200px" id="goal_chart{{ goal_context.goal.id }}">{{ divs }}</div>
                 </div>
-                <!-- Goal graph -->
-                <!--<img src="{% static 'gk/img/sample_graph_A.gif' %}" class="img-rounded img-responsive" href="#" style="max-width:100%;">      -->
-                <!--  <h4>A graph will go here</h4> -->
             </div>
 
             <div class="span7">         <!-- Goal info, add action/status update, goal contacts -->
