@@ -23,7 +23,7 @@ SECRET_KEY = 'dwwzv^67t^f9zb*rg78l+^%&5yq+ei4pm^wi$9epq%s(!&oii@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+#TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -87,12 +87,31 @@ USE_TZ = True
 #DATE_FORMAT = "m-d-Y"
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+#NEW IN 1.10 https://docs.djangoproject.com/en/1.10/ref/templates/upgrading/
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
+
+#
 STATIC_URL = '/static/'
-
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, '/healthcare/templates'), '/var/www/html/goalkeeper/healthcare/healthcare/templates/']
+#
+# TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates'), '/var/www/html/goalkeeper/healthcare/healthcare/templates/']
 
 # Additional locations of static files
 STATICFILES_DIRS = (
