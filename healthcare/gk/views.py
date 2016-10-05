@@ -602,7 +602,10 @@ def contacts(request, patient_id):
                }
     write_to_log(viewer_type, viewer.id, patient.id, 'view_contacts', 'contacts')
 
-    return render(request, 'gk/Contacts.html', context)
+    if mobileBrowser(request):
+        return render(request, 'gk/m_contacts.html', context)
+    else:
+        return render(request, 'gk/Contacts.html', context)
 
 
 @login_required
