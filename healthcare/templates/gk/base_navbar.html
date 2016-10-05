@@ -1,0 +1,31 @@
+     {% extends 'base.html' %}
+{% load staticfiles %}
+      {% block nav %}
+    <div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->
+      <div class="navbar-inner">
+          <a class="brand" href="#"></a>
+          <ul class="nav navbar-left">
+            {%if viewer_type == "caregiver" %}
+              <li><a href="{% url 'gk:home' %}">Return Home</a></li>
+            {%endif%}
+            <li class="active"><a href="{% url 'gk:home' patient.id %}">Goals</a></li>     <!-- Top bar list of links -->
+            <li><a href="{% url 'gk:action' patient.id %}">Actions</a></li>
+            <li><a href="{% url 'gk:profile' patient.id %}">Profile</a></li>
+            <li><a href="{% url 'gk:contacts' patient.id %}">Contacts</a></li>
+          </ul>
+          <ul class="nav pull-right">
+            <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
+            {% if islogin %}
+            <li><a href="{% url 'healthcare:logout' %}">Log out</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+
+{% block content %}
+{% endblock %}
+{% endblock %}
+
+
+
