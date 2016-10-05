@@ -1,30 +1,39 @@
-     {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load staticfiles %}
-      {% block nav %}
-    <div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->
-      <div class="navbar-inner">
-          <a class="brand" href="#"></a>
-          <ul class="nav navbar-left">
-            {%if viewer_type == "caregiver" %}
-              <li><a href="{% url 'gk:home' %}">Return Home</a></li>
-            {%endif%}
-            <li class="active"><a href="{% url 'gk:home' patient.id %}">Goals</a></li>     <!-- Top bar list of links -->
-            <li><a href="{% url 'gk:action' patient.id %}">Actions</a></li>
-            <li><a href="{% url 'gk:profile' patient.id %}">Profile</a></li>
-            <li><a href="{% url 'gk:contacts' patient.id %}">Contacts</a></li>
-          </ul>
-          <ul class="nav pull-right">
-            <li><p class="navbar-text navbar-right" style="color:#ffffff">{{viewer_name}}</p></li>
-            {% if islogin %}
-            <li><a href="{% url 'healthcare:logout' %}">Log out</a></li>
-            {% endif %}
-          </ul>
+{% block nav %}
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if viewer_type == "caregiver" %}
+                    <a class="navbar-brand" href="{% url 'gk:home' %}">GoalKeeper</a>
+                {% else %}
+                    <a class="navbar-brand" href="#">GoalKeeper</a>
+                {% endif %}
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'gk:home' patient.id %}"><span class="glyphicon glyphicon-stats"></span> Goals</a></li>
+                    <li><a href="{% url 'gk:action' patient.id %}"><span class="glyphicon glyphicon-flash"></span> Actions</a></li>
+                    <li><a href="{% url 'gk:profile' patient.id %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                    <li><a href="{% url 'gk:contacts' patient.id %}"><span class="glyphicon glyphicon-book"></span> Contacts</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+{#                    <li><span class="navbar-text navbar-right">{{ viewer_name }} </span></li>#}
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'healthcare:logout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-      </div>
+    </nav>
 
-
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 {% endblock %}
 
 

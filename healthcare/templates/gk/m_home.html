@@ -1,64 +1,9 @@
+{% extends 'gk/base_navbar.html' %}
+
 {% load staticfiles %}
 {% load bootstrap %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="{% static 'gk/css/custom.css' %}" rel="stylesheet" type="text/css">
-
-    {#    <link href="{% static 'gk/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">#}
-    {#    <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">#}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GoalKeeper</title>
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-    <script>
-        //   $(function() {
-        //     $( "#datepicker" ).datepicker();
-        //   });
-    </script>
-    <script src="{% static 'gk/Highcharts-4.0.3/js/highcharts.js' %}"></script>
-
-    <style>
-        body {
-            padding-top: 70px
-        }
-
-    </style>
-</head>
-<body>
-{#<div class="navbar navbar-inverse navbar-fixed-top">      <!-- Top Bar -->#}
-{#    <div class="navbar-inner">#}
-{#        <a class="brand" href="#"></a>#}
-{#        <ul class="nav navbar-left">#}
-{#            {% if viewer_type == "caregiver" %}#}
-{#                <li><a href="{% url 'gk:home' %}">Return Home</a></li>#}
-{#            {% endif %}#}
-{#            <li class="active"><a href="{% url 'gk:home' patient.id %}">Goals</a></li>#}
-{#            <!-- Top bar list of links -->#}
-{#            <li><a href="{% url 'gk:action' patient.id %}">Actions</a></li>#}
-{#            <li><a href="{% url 'gk:profile' patient.id %}">Profile</a></li>#}
-{#            <li><a href="{% url 'gk:contacts' patient.id %}">Contacts</a></li>#}
-{#        </ul>#}
-{#        <ul class="nav pull-right">#}
-{#            <li><p class="navbar-text navbar-right" style="color:#ffffff">{{ viewer_name }}</p></li>#}
-{#            <li><a href="{% url 'healthcare:logout' %}">Log out</a></li>#}
-{#        </ul>#}
-{#    </div>#}
-{#</div>#}
-{#</div>#}
+{% block content %}
 <div class="container">
 
 
@@ -66,7 +11,7 @@
         <h1>Active Goals
             {% if viewer_role == "parent" or viewer_type == "patient" %}
                 <button type="button" class="pull-right btn btn-success btn-lg" data-toggle="modal"
-                        data-target="#myModal">New Goal
+                        data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> New Goal
                 </button></h1>
 
 
@@ -232,9 +177,5 @@
 
 
 </div>
+{% endblock %}
 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="{% static 'gk/js/bootstrap.min.js' %}"></script>
-</body>
-</html>
