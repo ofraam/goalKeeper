@@ -92,10 +92,6 @@ span.bg-success{
 
 
 
-body {
-	min-width: 1200px;
-}
-
 .GSscroll {
 	max-height: 350px;
 	overflow-y: auto;
