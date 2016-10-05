@@ -26,7 +26,8 @@ def _validate_field_lookup_term(model, term):
     """
     # TODO: Memoization for speed enchancements
     terms = term.split('__')
-    model_fields = model._meta.get_all_field_names()
+    print(model)
+    model_fields = [f.name for f in model._meta.get_fields()]
     if terms[0] not in model_fields:
         raise APIInputError("Field %r does not exist. Valid lookups are %s." 
                          % (terms[0], ', '.join(model_fields)))

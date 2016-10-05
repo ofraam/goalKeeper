@@ -22,7 +22,7 @@ def logs(request):
                 lines = lines[-number_logs:]
             return HttpResponse("<br/>".join(lines))    
     else:
-        return render(request, 'goalkeeper/healthcare/login.html', {"message": "Sorry, you don't have permission to view that page."})
+        return render(request, 'login.html', {"message": "Sorry, you don't have permission to view that page."})
 
 def show_login(request):
     if request.user.is_authenticated():
