@@ -455,6 +455,7 @@ def goal(request, goal_id):
                'goalChart': goalChart,
                'viewer_name': viewer.name,
                'viewer_role': viewer_role,
+               'viewer_type': viewer_type,
                'patient': patient,
                'errors': errors,
                'non_field_errors': non_field_errors
@@ -539,6 +540,7 @@ def action(request, patient_id):
                'AddActionForm_ActionPage': form,
                'name': viewer.name,
                'viewer_role': viewer_role,
+               'viewer_type': viewer_type,
                'patient': patient,
                'errors': errors,
                'non_field_errors': non_field_errors
@@ -595,6 +597,7 @@ def contacts(request, patient_id):
                'patient': patient,
                'errors': errors,
                'viewer_role': viewer_role,
+               'viewer_type': viewer_type,
                'non_field_errors': non_field_errors
                }
     write_to_log(viewer_type, viewer.id, patient.id, 'view_contacts', 'contacts')
@@ -622,6 +625,7 @@ def profile(request, patient_id):
         '-pub_time')[:5]
     context = {'patient': patient,
                'viewer_role': viewer_role,
+               'viewer_type': viewer_type,
                'updates': updates,
                }
     write_to_log(viewer_type, viewer.id, patient.id, 'view_profile', 'profile')
