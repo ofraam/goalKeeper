@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gk',
     'chartit',
+    'bootstrapform',
 )
 
 MIDDLEWARE_CLASSES = (
