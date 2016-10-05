@@ -117,9 +117,9 @@ def login_handler(request):
             login(request, user)
             return redirect('gk:home')
         else:
-            return render(request, 'login.html', {"message": "Sorry, there was a problem logging you in."})
+            return render(request, 'login.html', {"message": "Sorry, there was a problem logging you in.","islogin": "islogin"})
     else:
-        return render(request, 'login.html', {"message": "Sorry, there was a problem with your username or password."})
+        return render(request, 'login.html', {"message": "Sorry, there was a problem with your username or password.","islogin": "islogin"})
 
 def logout_handler(request):
     logout(request)

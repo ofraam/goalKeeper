@@ -1,10 +1,12 @@
 {% load staticfiles %}
+{% load bootstrap %}
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link href="{% static 'gk/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">
+    <!--<link href="{% static 'gk/css/Right Side Bar.css' %}" rel="stylesheet">-->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,12 +21,10 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 
-
     <style>
-        body {
-            padding-top: 70px
-        }
-
+      body{
+        padding-top: 70px
+      }
     </style>
 </head>
 <body>
@@ -36,12 +36,12 @@
         </ul>
         <ul class="nav pull-right">
             <li><p class="navbar-text navbar-right" style="color:#ffffff">{{ viewer_name }}</p></li>
-            <li><a href="{% url 'healthcare:logout' %}"><p>Log out</p></a></li>
         </ul>
     </div>
 </div>
 </div>
-<div class="container">
+
+<div class="container-fluid">
     {% if message %}
         <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -51,13 +51,14 @@
     {% endif %}
 
 
-    <div class="row">
+    <div class="row-fluid">
         <div style="text-align:center">
             <h1 style="text-align:center">Login</h1>
 
 
             <form action="/login/" method="POST" style="margin-left:auto; margin-right: auto;">
                 {% csrf_token %}
+                {{ form }}
                 <div class="form-group" style="text-align:center">
                     <input type="text" class="form-control input-lg" placeholder="Username" id="email" name="email"/>
                 </div>
