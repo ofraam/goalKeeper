@@ -1,18 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext, loader
+from django.template import loader
+
 from gk.models import *
 from django import forms
 from chartit import DataPool, Chart
-import simplejson
 import datetime
 import time
-from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
 from django.utils import timezone
 import pytz
 import logging
+
+from healthcare.views import mobileBrowser
 
 logger = logging.getLogger(__name__)
 # timezone.deactivate()
@@ -217,7 +218,13 @@ def home(request, user_id):
 
     write_to_log(viewer_type, viewer.id, user_id, 'patient', '')
 
-    return render(request, 'gk/Home.html', context)
+    if mobileBrowser(request):
+        t = loader.get_template('gk/m_home.html')
+    else:
+        t = loader.get_template('gk/Home.html')
+
+    return HttpResponse(t.render(context))
+    #return render(request, 'gk/Home.html', context)
 
 
 @login_required
