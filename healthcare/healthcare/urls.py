@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'healthcare.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
@@ -13,4 +13,4 @@ urlpatterns = patterns('',
     url(r'^login/', 'healthcare.views.login_handler', name='login'),
     url(r'^logout/', 'healthcare.views.logout_handler', name='logout'), 
     url(r'^logs/', 'healthcare.views.logs'), 
-)
+]
