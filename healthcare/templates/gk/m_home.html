@@ -9,7 +9,7 @@
         <h1>Active Goals
             {% if viewer_role == "parent" or viewer_type == "patient" %}
                 <button type="button" class="pull-right btn btn-success btn-lg" data-toggle="modal"
-                        data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> New Goal
+                        data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Goal
                 </button></h1>
 
 
@@ -38,6 +38,7 @@
 
                     </div>
                 </div>
+                <div class="clearfix"></div>
             {% else %}
                 </h1>
             {% endif %}

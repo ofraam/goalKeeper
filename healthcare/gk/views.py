@@ -506,30 +506,24 @@ def action(request, patient_id):
                                                    )
 
                 write_to_log(viewer_type, viewer.id, patient.id, 'new_action', NEW_ACTION.id)
-
-            # return HttpResponseRedirect('')
             else:
                 errors = form.errors
                 non_field_errors = form.non_field_errors
 
-        elif ('Complete' in request.POST):
+        elif ('complete' in request.POST):
             action = get_object_or_404(Action, id=request.POST.get('actionName', False))
             action.completed = True
             action.save()
 
             write_to_log(viewer_type, viewer.id, patient.id, 'completed_action', action.id)
 
-            return HttpResponseRedirect('')
         elif ('remove' in request.POST):
             action = get_object_or_404(Action, id=request.POST.get('actionName', False))
             action.delete()
 
             write_to_log(viewer_type, viewer.id, patient.id, 'removed_action', action.id)
 
-            return HttpResponseRedirect('')
-
-    else:
-        form = AddActionForm_ActionPage(patient=patient)
+    form = AddActionForm_ActionPage(patient=patient)
 
     actions = Action.objects.filter(goal__patient=patient, goal__caregivers__id__exact=viewer.id).order_by('-deadline')
     completed_actions = [a for a in actions if a.completed]

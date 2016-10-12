@@ -1,6 +1,7 @@
 {% extends 'base_navbar.html' %}
+{% load staticfiles %}
+{% load bootstrap %}
 {% block head %}
-    {% load staticfiles %}
     <script>
         $(function () {
             $(".datepicker").datepicker();
@@ -17,97 +18,113 @@
         </div>
     {% endif %}
     <div class="container">
-        <div class="row">
-            <div class="span8 well">      <!-- Main page -->
-                <h3>Pending Actions {{ words }}</h3>
-                {% if pending_actions %}
-                    {% for action in pending_actions %}
-                        <p>
-
-                        <form role="form" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="actionName" value={{ action.id }}/>
-                            <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small"/>
+        <h1>Pending Actions{% if viewer_role == "parent" or viewer_type == "patient" %}
+            <button type="button" class="pull-right btn btn-success btn-lg" data-toggle="modal"
+                    data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Action
+            </button></h1>
 
 
-                            &nbsp;&nbsp;
-                            <span class="bg-info">{{ action.goal }}</span>
-                            &nbsp;&nbsp;
-                            <span class="bg-warning">{{ action.name }} on {{ action.deadline }}</span>
-                            &nbsp;&nbsp;
-                            <span class="bg-info">Notes: {{ action.notes }}</span>
-                            {% if viewer_role == "parent" or viewer_type == "patient" %}
-                                &nbsp;&nbsp;
-                                <input type="submit" value="&times; Remove" name="remove"
-                                       class="btn btn-danger btn-small"/>
+
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add a New Goal</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form" method="post">
+                                {{ AddActionForm_ActionPage |bootstrap }}
+                                {% csrf_token %}
+                                <input type="submit" value="Submit" name="actionForm" class="btn btn-success"/>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        {% else %}
+            </h1>
+        {% endif %}
+        {% if pending_actions %}
+            <hr>
+            {% for action in pending_actions %}
+                <form role="form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="actionName" value={{ action.id }}>
+                    <h3>{{ action.name }}
+                        {% if viewer_role == "parent" or viewer_type == "patient" %}
+                            <span class="pull-right">
+                                <button type="submit" name="complete" class="btn-success btn ">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                                <button type="submit" name="remove" class="btn-danger btn">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </span>
                             {% endif %}
-                        </form>
-                        </p>
+                    </h3>
+                <h3><small>for {{ action.goal }}, until {{ action.deadline }}</small></h3>
+                    <div class="row">
+                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-2">
+                            Notes:
+                        </div>
+                        <div class="col-md-11 col-lg-11 col-sm-11 col-xs-10">
 
-                    {% endfor %}
-                {% else %}
-                    <h4>You have no pending actions</h4>
-                {% endif %}
-
+                            {{ action.notes }}
+                        </div>
+                    </div>
+                </form>
                 <hr>
 
-                <h3>Completed Actions</h3>
+            {% endfor %}
+        {% else %}
+            <h4>You have no pending actions.</h4>
+            <hr>
+        {% endif %}
+        <h1>Completed Actions</h1>
+         <hr>
+        {% if completed_actions %}
+            {% for action in completed_actions %}
+                <form role="form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="actionName" value={{ action.id }}>
+                    <h3>
+                        <span class="glyphicon glyphicon-ok"></span> {{ action.name }}
+                        {% if viewer_role == "parent" or viewer_type == "patient" %}
+                            <span class="pull-right">
 
-                {% if completed_actions %}
-                    {% for action in completed_actions %}
-
-                        <p>
-                        <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
-                            <input type="hidden" name="actionName" value={{ action.id }}/>
-                            <span class="bg-success">&nbsp;&check;&nbsp;</span>
-                            &nbsp;
-                            <span class="bg-info">{{ action.goal }}</span>
-                            &nbsp;
-                            <span class="bg-success">{{ action.name }} on {{ action.deadline }}</span>
-                            &nbsp;&nbsp;
-                            <span class="bg-info">Notes: {{ action.notes }}</span>
-                            {% if viewer_role == "parent" or viewer_type == "patient" %}
-                                &nbsp;&nbsp;
-                                <input type="submit" value="&times; Remove" name="remove"
-                                       class="btn btn-danger btn-small"/>
+                                <button type="submit" name="remove" class="btn-danger btn">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </span>
                             {% endif %}
-                        </form>
-                        </p>
+                    </h3>
+                <h3><small>for {{ action.goal }}, until {{ action.deadline }}</small></h3>
+                    <div class="row">
+                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-2">
+                            Notes:
+                        </div>
+                        <div class="col-md-11 col-lg-11 col-sm-11 col-xs-10">
 
-                    {% endfor %}
-                {% else %}
-                    <h4>You have no completed actions</h4>
-                {% endif %}
-
-            </div>
-            {% if viewer_role == "parent" or viewer_type == "patient" %}
-                <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
-
-                    <!-- Do not display this at the moment
-      <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive profile-pic">
-      <br>
-
-      <div id="recs" class="well">
-        <h3>Recommendations:</h3>
-        <ul>
-          <li><a href="#">Recommendation 1</a></li>
-          <li><a href="#">Recommendation 2</a></li>
-          <li><a href="#">Recommendation 3</a></li>
-          <li><p>Schedule appointment with GI</p></li>
-          <li><p>Update Bart's weight</p></li>
-        </ul>
-      </div>
-      -->
-                    <div class="well" id="addActionForm">
-                        <h3>Add Action</h3>
-                        <form role="form" method="post">{% csrf_token %}
-                            {{ AddActionForm_ActionPage.as_p }}
-                            <input type="submit" value="Submit" name="actionForm" class="btn btn-primary"/>
-                        </form>
+                            {{ action.notes }}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-        </div>
+                </form>
+                <hr>
+
+            {% endfor %}
+        {% else %}
+            <h4>You have no completed actions.</h4>
+        {% endif %}
+
 
     </div>
 
