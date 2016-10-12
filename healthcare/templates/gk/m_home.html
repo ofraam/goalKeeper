@@ -1,12 +1,10 @@
-{% extends 'gk/../base_navbar.html' %}
+{% extends 'base_navbar.html' %}
 
 {% load staticfiles %}
 {% load bootstrap %}
 
 {% block content %}
 <div class="container">
-
-
     {% if goals_context %}
         <h1>Active Goals
             {% if viewer_role == "parent" or viewer_type == "patient" %}

@@ -548,7 +548,10 @@ def action(request, patient_id):
 
     write_to_log(viewer_type, viewer.id, patient.id, 'actions', '')
 
-    return render(request, 'gk/Actions.html', context)
+    if mobileBrowser(request):
+        return render(request, 'gk/m_actions.html', context)
+    else:
+        return render(request, 'gk/actions.html', context)
 
 
 @login_required
