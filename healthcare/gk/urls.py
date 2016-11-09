@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^contacts/(?P<patient_id>[\w ]+)/$', views.contacts, name='contacts'),
     url(r'^profile/(?P<patient_id>[\w ]+)/$', views.profile, name='profile'),
     url(r'^(?P<user_id>\w+)/$', views.home, name='home'),
+    url(r'^api/goal_over_time/(?P<goal_id>[\w ]+)', views.goal_over_time, name='goal_over_time'),
 ]
 
 #urlpatterns += staticfiles_urlpatterns()

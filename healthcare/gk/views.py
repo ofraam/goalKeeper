@@ -10,6 +10,9 @@ import time
 from django.contrib.auth.decorators import login_required
 from healthcare.views import get_patient_caregiver
 from django.utils import timezone
+from django.http import JsonResponse
+from django.db import connections
+
 import pytz
 import logging
 
@@ -219,14 +222,13 @@ def home(request, user_id):
     write_to_log(viewer_type, viewer.id, user_id, 'patient', '')
 
     if mobileBrowser(request):
-        #t = loader.get_template('gk/m_home.html')
+        # t = loader.get_template('gk/m_home.html')
         return render(request, 'gk/m_home.html', context)
     else:
-        #t = loader.get_template('gk/Home.html')
+        # t = loader.get_template('gk/Home.html')
         return render(request, 'gk/Home.html', context)
 
-    #return HttpResponse(t.render(context))
-
+        # return HttpResponse(t.render(context))
 
 
 @login_required
@@ -409,37 +411,6 @@ def goal(request, goal_id):
                 1: 'Same',
                 2: 'Better'}
 
-    goalChart_data = DataPool(
-        series=[
-            {'options': {
-                'source': recent_status_updates},
-                'terms': [
-                    ('pub_time', lambda d: time.mktime(d.timetuple())),
-                    'data_value',
-                ]}
-        ]
-    )
-
-    goalChart = Chart(
-        datasource=goalChart_data,
-        series_options=[{
-            'options': {
-                'type': 'line',
-                'stacking': False},
-            'terms': {
-                'pub_time': [
-                    'data_value']}
-        }],
-        chart_options=
-        {'title': {
-            'text': goal.name},
-            'xAxis': {
-                'title': {
-                    'text': 'Date'}
-            },
-        },
-        x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%m/%d/%y"), False)
-    )
 
     context = {'goal': goal,
                'actions': actions,
@@ -452,7 +423,7 @@ def goal(request, goal_id):
                'AddActionForm_GoalPage': AddActionForm_GoalPage,
                'AddQuantStatusForm': AddQuantStatusForm,
                'AddQualStatusForm': AddQualStatusForm,
-               'goalChart': goalChart,
+               'goal_id' : goal_id,
                'viewer_name': viewer.name,
                'viewer_role': viewer_role,
                'viewer_type': viewer_type,
@@ -463,6 +434,15 @@ def goal(request, goal_id):
 
     write_to_log(viewer_type, viewer.id, patient.id, 'goal', goal_id)
     return render(request, 'gk/Goal.html', context)
+
+
+@login_required
+def goal_over_time(request, goal_id):
+    data = StatusUpdate.objects.filter(goal=goal_id).order_by('-pub_time').extra(select={
+        'day': connections[StatusUpdate.objects.db].ops.date_trunc_sql('day',
+                                                                         'pub_time')}).values('day', 'data_value')
+
+    return JsonResponse(list(data), safe=False)
 
 
 @login_required
