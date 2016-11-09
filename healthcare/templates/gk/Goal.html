@@ -157,6 +157,7 @@
 
           <div class="clearfix"></div>
 
+          <div class="row-fluid">
             <div class="span5" id="StatusUpdates">
               <h3>Recent Status Updates</h3>
               <div id="recent_updates" class="GSscroll">
@@ -166,19 +167,19 @@
 
                       <div id="status udpdate" class="bg-info">
                         {% if goal.data_type == 1 %}
+                          <div role="tabpanel" class="tabbable tabs-right">
+                          {% if viewer_role == "parent" or viewer_type == "patient" %}
+                            <div class="navbar-collapse collapse navbar-right">
+                            <ul class="nav nav-tabs" role="tablist">
+                              <li role="presentation" class="active"><a href="#{{status_update.status_data.id}}_view" aria-controls="{{status_update.status_data.id}}_view" role="tab" data-toggle="tab">View</a></li>
+                              <li role="presentation"><a href="#{{status_update.status_data.id}}_edit" aria-controls="{{status_update.status_data.id}}_edit" role="tab" data-toggle="tab">Edit</a></li>
+                            </ul>
+                              </div>
+                            {% endif %}
 
                             <!-- Tab panes -->
                             <div class="tab-content">
                               <div role="tabpanel" class="tab-pane active" id="{{status_update.status_data.id}}_view">
-
-                          {% if viewer_role == "parent" or viewer_type == "patient" %}
-                            <div class="navbar-collapse collapse navbar-right">
-                              <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#{{status_update.status_data.id}}_view" aria-controls="{{status_update.status_data.id}}_view" role="tab" data-toggle="tab">View</a></li>
-                                <li role="presentation"><a href="#{{status_update.status_data.id}}_edit" aria-controls="{{status_update.status_data.id}}_edit" role="tab" data-toggle="tab">Edit</a></li>
-                              </ul>
-                            </div>
-                            {% endif %}
                                    <p >Value: {{status_update.status_data.data_value}}  <br>Notes: {{status_update.status_data.status}}<br><small>Posted on {{status_update.status_data.pub_time}}</small></p>
 
                               </div>
@@ -216,6 +217,8 @@
                                 </form>
                               </div>
                             </div>
+
+                          </div>
 
 
                         {% elif goal.data_type == 0 %}
