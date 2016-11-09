@@ -1,3 +1,17 @@
+.navbar-inverse  {
+    background-color: #fece92;
+    border-color: #babbb5;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #6f7685;
+
+}
+
+.navbar-inverse .navbar-brand {
+    color: #6f7685;
+
+}
 
 .multiple-checkbox > ul {
     list-style: none;
