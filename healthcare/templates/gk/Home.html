@@ -16,8 +16,9 @@
 
                             <div class="span4">
                                 <div class="row-fluid">
+                                    <div id="chart{{ goal_context.goal.id }}"></div>
 
-                                    <div style="height:200px" id="goal_chart{{ goal_context.goal.id }}">{{ divs }}</div>
+                                    {#                                    <div style="height:200px" id="goal_chart{{ goal_context.goal.id }}">{{ divs }}</div>#}
                                 </div>
 
                             </div>
@@ -124,8 +125,7 @@
                     {% endfor %}
                 {% else %}
                 {% endif %}
-                {% load chartit %}
-                {{ charts|load_charts:divs }}
+
             </div>  <!-- Main page Collapse -->
             {% if viewer_role == "parent" or viewer_type == "patient" %}
                 <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
@@ -144,4 +144,82 @@
         </div>
 
     </div>
+
+
+
+    <script>
+        function drawPlot(chartid) {
+            var margin = {top: 20, right: 20, bottom: 30, left: 50},
+                    width = 960 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+            var parseDate = d3.time.format("%Y-%m-%d").parse; // for dates like "2014-01-01"
+            //var parseDate = d3.time.format("%Y-%m-%dT00:00:00Z").parse;  // for dates like "2014-01-01T00:00:00Z"
+
+            var x = d3.time.scale().range([0, width]);
+            var y = d3.scale.linear().range([height, 0]);
+
+            var xAxis = d3.svg.axis().scale(x)
+                    .orient("bottom").ticks(5);
+
+            var yAxis = d3.svg.axis().scale(y)
+                    .orient("left").ticks(5);
+
+            var line = d3.svg.line()
+                    .x(function (d) {
+                        return x(d.day);
+                    })
+                    .y(function (d) {
+                        return y(d.data_value);
+                    });
+
+
+            d3.json("/goalkeeper/api/goal_over_time/".concat(chartid), function (error, data) {
+                data.forEach(function (d) {
+                    d.day = parseDate(d.day);
+                    d.data_value = +d.data_value;
+                });
+                if (jQuery.isEmptyObject(data)) {
+                    return;
+                }
+
+                var svg = d3.select("#chart".concat(chartid)).append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                x.domain(d3.extent(data, function (d) {
+                    return d.day;
+                }));
+                y.domain([0, d3.max(data, function (d) {
+                    return d.data_value;
+                })]);
+
+                //add the x axis
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+
+
+                // Add the Y Axis
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
+
+                //add the lines
+                svg.append("path")
+                        .datum(data)
+                        .attr("class", "line")
+                        .attr("d", line);
+            });
+        }
+
+    </script>
+    {% if goals_context %}
+        {% for goal_context in goals_context %}
+            <script>drawPlot({{ goal_context.goal.id }})</script>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

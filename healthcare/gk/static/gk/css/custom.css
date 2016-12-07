@@ -1,4 +1,4 @@
-.navbar-inverse  {
+.navbar-inverse {
     background-color: #fece92;
     border-color: #babbb5;
 }
@@ -19,8 +19,34 @@
     padding: 0;
 }
 
+/* D3 Options */
 td > ul {
     list-style: none;
     margin-left: 0px;
     padding: 0;
 }
+
+path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+/*.x.axis path {*/
+    /*display: none;*/
+/*}*/
+
+.line {
+    fill: none;
+    /*stroke: steelblue;*/
+    stroke-width: 1.5px;
+}
+
