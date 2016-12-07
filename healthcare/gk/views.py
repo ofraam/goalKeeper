@@ -4,7 +4,6 @@ from django.template import loader
 
 from gk.models import *
 from django import forms
-from chartit import DataPool, Chart
 import datetime
 import time
 from django.contrib.auth.decorators import login_required
@@ -137,7 +136,6 @@ def home(request, user_id):
     actions = Action.objects.filter(goal__patient=patient).all()
 
     goals_context = []
-    charts = []
     divs = []
     for g in latest_goals:
         goal = get_object_or_404(Goal, id=g.id)
@@ -147,39 +145,8 @@ def home(request, user_id):
         this_goal['goal'] = goal
 
         recent_status_updates = StatusUpdate.objects.filter(goal=goal).order_by('-pub_time')
-        goalChart_data = DataPool(
-            series=[
-                {'options': {
-                    'source': recent_status_updates},
-                    'terms': [
-                        ('pub_time', lambda d: time.mktime(d.timetuple())),
-                        'data_value',
-                    ]}
-            ]
-        )
 
-        goalChart = Chart(
-            datasource=goalChart_data,
-            series_options=[{
-                'options': {
-                    'type': 'line',
-                    'stacking': False},
-                'terms': {
-                    'pub_time': [
-                        'data_value']}
-            }],
-            chart_options=
-            {'title': {
-                'text': goal.name},
-                'xAxis': {
-                    'title': {
-                        'text': 'Date'}
-                }
-            },
-            x_sortf_mapf_mts=(None, lambda i: datetime.datetime.fromtimestamp(i).strftime("%m/%d/%y"), False)
-        )
 
-        charts.append(goalChart)
         divs.append("goal_chart" + str(goal.id))
 
         goals_context.append(this_goal)
@@ -206,7 +173,6 @@ def home(request, user_id):
     pic = patient.photo.name.split("/")[-1]
     context = {'goals_context': active_goals,
                'inactive_goals_context': inactive_goals,
-               'charts': charts,
                'divs': div_string,
                'actions': actions,
                'AddGoalForm': form,
@@ -442,7 +408,6 @@ def goal_over_time(request, goal_id):
         'day': connections[StatusUpdate.objects.db].ops.date_trunc_sql('day',
                                                                         'pub_time')}).values('day', 'data_value')
 
-    print(data)
     return JsonResponse(list(data), safe=False)
 
 
