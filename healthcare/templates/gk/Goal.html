@@ -28,11 +28,6 @@
 
     {% load chartit %}
     {{goalChart|load_charts:"goal_chart"}}
-    <style>
-      body{
-        padding-top: 70px
-      }
-    </style>
 
     {%if errors or non_field_errors%}
     <div class="alert alert-error pageError">      
@@ -167,17 +162,55 @@
 
                       <div id="status udpdate" class="bg-info">
                         {% if goal.data_type == 1 %}
-                          <div role="tabpanel" class="tabbable tabs-right">
+                            <div class="container">
                           {% if viewer_role == "parent" or viewer_type == "patient" %}
-                            <div class="navbar-collapse collapse navbar-right">
-                            <ul class="nav nav-tabs" role="tablist">
-                              <li role="presentation" class="active"><a href="#{{status_update.status_data.id}}_view" aria-controls="{{status_update.status_data.id}}_view" role="tab" data-toggle="tab">View</a></li>
-                              <li role="presentation"><a href="#{{status_update.status_data.id}}_edit" aria-controls="{{status_update.status_data.id}}_edit" role="tab" data-toggle="tab">Edit</a></li>
-                            </ul>
-                              </div>
-                            {% endif %}
+                              <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#{{status_update.status_data.id}}_view">View</a></li>
+                                <li><a data-toggle="tab" href="#{{status_update.status_data.id}}_edit">Edit</a></li>
+                              </ul>
+                          {% endif %}
 
-                            <!-- Tab panes -->
+                              <div class="tab-content">
+                                <div id="{{status_update.status_data.id}}_view" class="tab-pane fade in active">
+                                   <p >Value: {{status_update.status_data.data_value}}  <br>Notes: {{status_update.status_data.status}}<br><small>Posted on {{status_update.status_data.pub_time}}</small></p>
+                                </div>
+                                <div id="{{status_update.status_data.id}}_edit" class="tab-pane fade">
+                                <form class="form-horizontal" role="form" method="post">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="updateStatus" value="updateStatus">
+                                  <input type="hidden" name="statusID" value="{{status_update.status_data.id}}">
+                                  <div class="form-group">
+                                    <label for="value" class="col-sm-2 control-label">
+                                      <b>Value</b></label>
+                                    <div class="col-sm-4">
+                                      <input type="number" class="form-control" id="{{status_update.status_data.id}}_value" placeholder="Value" value="{{status_update.status_data.data_value}}" name="data_Value">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Notes</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <textarea class="form-control" id="{{status_update.status_data.id}}_notes" placeholder="Notes" name="notes">{{status_update.status_data.status}}</textarea>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Time</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <input type="text" class="form-control datetimepicker" id="{{status_update.status_data.id}}_time" value='{{status_update.status_data.pub_time|date:"m/d Y H:i"}}' name="pub_time">
+                                    </div>
+                                  </div>
+                                  <button type="submit" class="btn">Update</button>
+                                </form>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Tab panes
                             <div class="tab-content">
                               <div role="tabpanel" class="tab-pane active" id="{{status_update.status_data.id}}_view">
                                    <p >Value: {{status_update.status_data.data_value}}  <br>Notes: {{status_update.status_data.status}}<br><small>Posted on {{status_update.status_data.pub_time}}</small></p>
@@ -191,7 +224,7 @@
                                   <div class="form-group">
                                     <label for="value" class="col-sm-2 control-label">
                                       <b>Value</b></label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-4">
                                       <input type="number" class="form-control" id="{{status_update.status_data.id}}_value" placeholder="Value" value="{{status_update.status_data.data_value}}" name="data_Value">
                                     </div>
                                   </div>
@@ -199,7 +232,7 @@
                                     <label for="notes" class="col-sm-2 control-label">
                                       <b>Notes</b>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-4">
 
                                       <textarea class="form-control" id="{{status_update.status_data.id}}_notes" placeholder="Notes" name="notes">{{status_update.status_data.status}}</textarea>
                                     </div>
@@ -208,7 +241,7 @@
                                     <label for="notes" class="col-sm-2 control-label">
                                       <b>Time</b>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-4">
 
                                       <input type="text" class="form-control datetimepicker" id="{{status_update.status_data.id}}_time" value='{{status_update.status_data.pub_time|date:"m/d Y H:i"}}' name="pub_time">
                                     </div>
@@ -217,8 +250,8 @@
                                 </form>
                               </div>
                             </div>
-
                           </div>
+                            -->
 
 
                         {% elif goal.data_type == 0 %}
