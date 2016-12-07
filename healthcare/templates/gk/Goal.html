@@ -1,0 +1,405 @@
+     {% extends 'gk/../base_navbar.html' %}
+      {% block content %}
+    {% load staticfiles %}
+
+    <script src="{% static 'gk/js/jquery.datetimepicker.js' %}"></script>
+
+
+    <script>
+      $(document).ready(function() {
+
+          $( ".datetimepicker" ).datetimepicker({
+            "format": "m/d Y H:i"
+          });
+
+          $( "#id_pub_time" ).datetimepicker({
+            "format": "m/d Y H:i",            
+          });
+
+           $( "#id_pub_time" ).val((new Date()).dateFormat("m/d Y H:i"));
+
+          $( ".datepicker" ).datetimepicker({
+            "format": "m/d/Y",
+             timepicker:false,
+
+          });
+        });
+    </script>
+
+    {% load chartit %}
+    {{goalChart|load_charts:"goal_chart"}}
+
+    {%if errors or non_field_errors%}
+    <div class="alert alert-error pageError">      
+        {{errors}}       
+        {{non_field_errors}} 
+    </div>
+    {%endif%}
+    <div class="container">
+      <div class="row">
+        <div class="span9 well">      <!-- Main page -->
+
+            <div role="tabpanel" class="tabbable tabs-right">   
+              {% if viewer_role == "parent" or viewer_type == "patient" %}
+              <div class="navbar-collapse collapse navbar-right">
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#view_goal_info" aria-controls="view_goal_info" role="tab" data-toggle="tab">View</a></li>
+                  <li role="presentation"><a href="#edit_goal_info" aria-controls="edit_goal_info" role="tab" data-toggle="tab">Edit</a></li>
+                </ul>
+              </div>
+              {% endif %}
+
+              <!-- Tab panes -->
+              <div class="tab-content">                
+                <div role="tabpanel" class="tab-pane active" id="view_goal_info">
+                     <h2>{{goal.name}}</h2> 
+                     <p>
+                      <i>Description:</i> {{goal.notes}}
+                    </p>
+                    <p>
+                      {%if goal.active%}                      
+                        <span class="bg-success">Active</span>
+                      {%else%}
+                        <span class="bg-danger">Not Active</span>
+                      {%endif%}                                          
+                    </p>
+
+                </div>  
+                <div role="tabpanel" class="tab-pane" id="edit_goal_info">     
+    <!--   <form role="form" method="post" >{% csrf_token %}
+              {{ UpdateGoalForm.as_p }}
+			  <input type="hidden" name="updateGoal" value="updateGoal"> 
+              <input type="submit" value="Submit" class="btn btn-primary" />
+					</form>-->
+                  <form class="form-horizontal" role="form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="updateGoal" value="updateGoal">                   
+                    <div class="form-group">
+                      <label for="name" class="col-sm-2 control-label">
+                        <b>Goal Name</b></label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="Goal Name" name="name" value="{{goal.name}}">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="notes" class="col-sm-2 control-label">
+                        <b>Notes</b>
+                      </label>
+                      <div class="col-sm-10">
+                        
+                        <textarea class="form-control" placeholder="Notes" name="notes">{{goal.notes}}</textarea>
+                      </div>
+                    </div>  
+                    <div class="form-group">
+                      <label for="notes" class="col-sm-2 control-label">
+                        <b>Active?</b>
+                      </label>
+                      <div class="col-sm-10">
+                        <select class="form-control" value="{{goal.active}}" name="active">
+                          {%if goal.active%}                      
+                            <option value="True" selected>Yes - Active</option>
+                            <option value="False">No - Not Active</option>
+                          {%else%}
+                            <option value="True">Yes - Active</option>
+                            <option value="False" selected>No - Not Active</option>
+                          {%endif%}  
+                          
+                        </select>     
+						
+                      </div>
+
+                    </div>  
+					<div class="form-group">
+					<label for="notes" class="col-sm-2 control-label">
+                        <b>Caregivers:</b>
+                      </label>
+					  <br>
+					<div class="col-sm-10">
+				  {% if all_caregivers %}
+				  <table>
+						{% for caregiver in all_caregivers %}
+				
+					<tr>
+						<td>
+							{% if caregiver in caregivers %}
+							<input class="form-control" type="checkbox" name="caregivers" value="{{caregiver.id}}" checked="checked"> {{caregiver.name}}<br>
+							{%else%}
+							<input class="form-control" type="checkbox" name="caregivers" value="{{caregiver.id}}"> {{caregiver.name}}<br>
+							{%endif%} 
+						</td>
+					</tr>
+				
+						   
+						{% endfor %}
+						
+						{% endif %}
+                      </div>
+					</div>
+					<tr>
+						<td>
+                    <button type="submit" class="btn">Update</button>
+								</td>
+					</tr>
+					</table>
+                  </form>                     
+                </div>             
+              </div>
+
+            </div>
+
+
+            <div id="goal_chart"></div>
+
+          <div class="clearfix"></div>
+
+          <div class="row-fluid">
+            <div class="span5" id="StatusUpdates">
+              <h3>Recent Status Updates</h3>
+              <div id="recent_updates" class="GSscroll">
+                <div>
+                  {% if recent_status_updates %}
+                    {% for status_update in recent_status_updates %}
+
+                      <div id="status udpdate" class="bg-info">
+                        {% if goal.data_type == 1 %}
+                            <div class="container">
+                          {% if viewer_role == "parent" or viewer_type == "patient" %}
+                              <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#{{status_update.status_data.id}}_view">View</a></li>
+                                <li><a data-toggle="tab" href="#{{status_update.status_data.id}}_edit">Edit</a></li>
+                              </ul>
+                          {% endif %}
+
+                              <div class="tab-content">
+                                <div id="{{status_update.status_data.id}}_view" class="tab-pane fade in active">
+                                   <p >Value: {{status_update.status_data.data_value}}  <br>Notes: {{status_update.status_data.status}}<br><small>Posted on {{status_update.status_data.pub_time}}</small></p>
+                                </div>
+                                <div id="{{status_update.status_data.id}}_edit" class="tab-pane fade">
+                                <form class="form-horizontal" role="form" method="post">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="updateStatus" value="updateStatus">
+                                  <input type="hidden" name="statusID" value="{{status_update.status_data.id}}">
+                                  <div class="form-group">
+                                    <label for="value" class="col-sm-2 control-label">
+                                      <b>Value</b></label>
+                                    <div class="col-sm-4">
+                                      <input type="number" class="form-control" id="{{status_update.status_data.id}}_value" placeholder="Value" value="{{status_update.status_data.data_value}}" name="data_Value">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Notes</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <textarea class="form-control" id="{{status_update.status_data.id}}_notes" placeholder="Notes" name="notes">{{status_update.status_data.status}}</textarea>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Time</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <input type="text" class="form-control datetimepicker" id="{{status_update.status_data.id}}_time" value='{{status_update.status_data.pub_time|date:"m/d Y H:i"}}' name="pub_time">
+                                    </div>
+                                  </div>
+                                  <button type="submit" class="btn">Update</button>
+                                </form>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Tab panes
+                            <div class="tab-content">
+                              <div role="tabpanel" class="tab-pane active" id="{{status_update.status_data.id}}_view">
+                                   <p >Value: {{status_update.status_data.data_value}}  <br>Notes: {{status_update.status_data.status}}<br><small>Posted on {{status_update.status_data.pub_time}}</small></p>
+
+                              </div>
+                              <div role="tabpanel" class="tab-pane" id="{{status_update.status_data.id}}_edit">
+                                <form class="form-horizontal" role="form" method="post">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="updateStatus" value="updateStatus">
+                                  <input type="hidden" name="statusID" value="{{status_update.status_data.id}}">
+                                  <div class="form-group">
+                                    <label for="value" class="col-sm-2 control-label">
+                                      <b>Value</b></label>
+                                    <div class="col-sm-4">
+                                      <input type="number" class="form-control" id="{{status_update.status_data.id}}_value" placeholder="Value" value="{{status_update.status_data.data_value}}" name="data_Value">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Notes</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <textarea class="form-control" id="{{status_update.status_data.id}}_notes" placeholder="Notes" name="notes">{{status_update.status_data.status}}</textarea>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="notes" class="col-sm-2 control-label">
+                                      <b>Time</b>
+                                    </label>
+                                    <div class="col-sm-4">
+
+                                      <input type="text" class="form-control datetimepicker" id="{{status_update.status_data.id}}_time" value='{{status_update.status_data.pub_time|date:"m/d Y H:i"}}' name="pub_time">
+                                    </div>
+                                  </div>
+                                  <button type="submit" class="btn">Update</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                            -->
+
+
+                        {% elif goal.data_type == 0 %}
+                          {% for key, value in qualDict.items %}
+                            {% if key == status_update.data_value %}
+                              <p >Value: {{value}}<br>Notes: {{status_update.status}}<br><small>Posted on {{status_update.pub_time}}</small></p>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    <br>
+
+                    {% endfor %}
+                  {% else %}
+                    There are no status updates available for this goal.
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="span7" id="Actions">
+              <h3>Pending Actions</h3>
+                <div id="pendingscroll" class="GAscroll">
+
+                  {% if pending_actions %}
+                    {% for action in pending_actions %}
+                    <p>
+
+                      <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <input type="hidden" name="actionName" value={{action.id}} />
+                        <input type="submit" value="Complete" name="Complete" class="btn btn-primary btn-small" />
+
+
+
+                        &nbsp;&nbsp;
+                        <span class="bg-warning">{{action.name}} on {{action.deadline}}</span>
+                        &nbsp;&nbsp;
+                        <span class="bg-info">Notes: {{action.notes}}</span>
+                        {% if viewer_role == "parent" or viewer_type == "patient" %}
+                        &nbsp;&nbsp;
+                        <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                        {% endif %}
+                      </form>
+                    </p>
+
+                    {% endfor %}
+                  {% else %}
+                    <p> There are no pending actions for this goal. </p>
+                  {% endif %}
+                </div>
+
+              <hr>
+
+              <h3>Completed Actions</h3>
+                <div class="GAscroll">
+                  {% if completed_actions %}
+                  {% for action in completed_actions %}
+
+                  <p>
+                    <form role="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+                      <input type="hidden" name="actionName" value={{action.id}} />
+                      <span class="bg-success">&nbsp;&check;&nbsp;</span>
+                      &nbsp;
+                      <span class="bg-success">{{action.name}} on {{action.deadline}}</span>
+                      &nbsp;&nbsp;
+                      <span class="bg-info">Notes: {{action.notes}}</span>
+                      {% if viewer_role == "parent" or viewer_type == "patient" %}
+                      &nbsp;&nbsp;
+                      <input type="submit" value="&times; Remove" name="remove" class="btn btn-danger btn-small" />
+                      {% endif %}
+                    </form>
+                  </p>
+                  {% endfor %}
+                  {% else %}
+                  <p> There are no completed actions for this goal. </p>
+                  {% endif %}
+                </div>
+            </div>
+
+          {% if viewer_role == "parent" or viewer_type == "patient" %}
+          <div class="row-fluid" id="AddForms">
+            <div class="span4" id="StatusUpdateForm">
+              <h3>Add Status Update</h3>
+
+              {% if goal.data_type == 1 %}
+
+              <form role="form" method="post" class="well">{% csrf_token %}
+                {{ AddQuantStatusForm.as_p }}
+                <input type="hidden" name="statQuant" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                
+              </form>
+
+              {% elif goal.data_type == 0 %}
+
+              <form role="form" method="post" class="well">{% csrf_token %}
+                {{ AddQualStatusForm.as_p }}
+                <input type="hidden" name="statQual" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                
+              </form>
+
+              {% endif %}
+            </div>
+
+            <div class="offset1 span4" id="ActionForm">
+              <h3>Add Action</h3>
+
+                    <form role="form" method="post" class="well">{% csrf_token %}
+                      {{ AddActionForm_GoalPage.as_p }}
+                      <input type="hidden" name="act" />
+                      <input type="submit" value="Submit" class="btn btn-primary" />
+                    </form>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+		</div>
+		 </div>
+        <div class="span3 pull-right " id="right-side-bar">     <!-- Right side Menu bar -->
+          <!-- Do not display this at the moment
+          <img src="{% static 'gk/img/fire.jpg' %}" id="profile-pic" class="img-rounded img-responsive profile-pic">
+          <br>
+          
+          <div id="recs" class="well">
+            <h3>Recommendations:</h3>
+            <ul>
+              <li><a href="#">Recommendation 1</a></li>
+              <li><a href="#">Recommendation 2</a></li>
+              <li><a href="#">Recommendation 3</a></li>
+              <li><p>Schedule appointment with GI</p></li>
+              <li><p>Update Bart's weight</p></li>
+            </ul>
+          </div>
+          -->
+          <div class="well" id="contacts">
+            <h3>Care Givers for this Goal</h3>
+            <ul>
+              {% if caregivers %}
+              {% for caregiver in caregivers %}
+              <li><a href="{% url 'gk:contacts' patient.id %}">{{caregiver.name}}</a></li>
+              {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      
+   
+    
+
+{% endblock %}
