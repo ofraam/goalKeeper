@@ -440,8 +440,9 @@ def goal(request, goal_id):
 def goal_over_time(request, goal_id):
     data = StatusUpdate.objects.filter(goal=goal_id).order_by('-pub_time').extra(select={
         'day': connections[StatusUpdate.objects.db].ops.date_trunc_sql('day',
-                                                                         'pub_time')}).values('day', 'data_value')
+                                                                        'pub_time')}).values('day', 'data_value')
 
+    print(data)
     return JsonResponse(list(data), safe=False)
 
 
